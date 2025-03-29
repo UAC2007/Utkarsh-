@@ -150,7 +150,7 @@ const ProductTable = () => {
         rows.unshift({
             id: item._id,
             name: item.name,
-            image: item.images[0].url,
+            image: item.images[0]?.url,
             category: item.category,
             stock: item.stock,
             price: item.price,
