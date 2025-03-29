@@ -1,94 +1,70 @@
-# Flipkart - MERN
-Full-Stack Flipkart with Admin Dashboard & Paytm Payment Gateway.
+# Getting Started with Create React App
 
-[Visit Now](https://flipkartweb-mern.vercel.app) 🚀
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## 🖥️ Tech Stack
-**Frontend:**
+## Available Scripts
 
-![reactjs](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)&nbsp;
-![react-router](https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=react-router&logoColor=white)&nbsp;
-![redux](https://img.shields.io/badge/Redux-593D88?style=for-the-badge&logo=redux&logoColor=white)&nbsp;
-![tailwindcss](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)&nbsp;
-![mui](https://img.shields.io/badge/Material--UI-0081CB?style=for-the-badge&logo=material-ui&logoColor=white)&nbsp;
-![chart-js](https://img.shields.io/badge/Chart.js-FF6384?style=for-the-badge&logo=chartdotjs&logoColor=white)&nbsp;
+In the project directory, you can run:
 
-**Backend:**
+### `npm start`
 
-![nodejs](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)&nbsp;
-![expressjs](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)&nbsp;
-![mongodb](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)&nbsp;
-![jwt](	https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=JSON%20web%20tokens&logoColor=white)&nbsp;
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-**Payment Gateway:**
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
 
-![paytm](https://img.shields.io/badge/Paytm-002970?style=for-the-badge&logo=paytm&logoColor=00BAF2)
+### `npm test`
 
-**Cloud Storage:** [Cloudinary](https://cloudinary.com/)
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-**Mail Service:** [Sendgrid](https://sendgrid.com/)
+### `npm run build`
 
-## 🚀 Features
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-**User Account Management**
-- Login/Signup: 🚪 Users can create an account or log in to an existing one.
-- Update Profile/Password: 🔐 Users can update their profile information and change their passwords.
-  
-**Password Management**
-- Reset Password Mail: 📧 Utilizing Sendgrid, users can reset their passwords via email.
-  
-**Shopping Cart**
-- Add/Remove Items: 🛒 Users can add items to their shopping cart or remove them as needed.
-- Update Quantities: 🔢 Quantities of items in the cart can be adjusted.
-  
-**Saved Items**
-- Save For Later: 💾 Users can move items from the cart to a "Saved For Later" list or remove them from it.
-  
-**Wishlist**
-- Add/Remove Items: ❤️ Users can add items to their wishlist or remove them from it.
-  
-**Product Browsing**
-- Pagination: 📚 Products are paginated, with 12 products displayed per page by default.
-- Search: 🔍 Users can search for products.
-- Filters: 🎛️ Products can be filtered based on categories, ratings, and price range.
-  
-**Checkout Process**
-- Shipping Info: 🚚 Shipping information is stored in session storage for ease of checkout.
-- Payment Options: 💳 Users can pay through Paytm payment gateway for checkout.
-  
-**Order Management**
-- My Orders: 📦 Users can view their order history with various filters.
-- Order Details: ℹ️ Details of all ordered items are accessible.
-- Order Confirmation: ✉️ Users receive email notifications with comprehensive order details upon placing an order.
-  
-**Product Interaction**
-- Review Products: 🌟 Users can review products.
-  
-**Admin Features**
-- Dashboard: 🖥️ Admins have access to a dedicated dashboard.
-- Order Management: 📊 Admins can update order statuses and delete orders.
-- Product Management: 📝 Admins can add/update products.
-- User Management: 👥 Admins can update user data and delete users.
-- Review Management: 📜 Admins can view and delete product reviews.
-- Stock Management: 📉 Product stock is automatically decreased upon shipment.
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-## Sneak Peek of Admin Dashboard 🙈 :
-![Capture](https://user-images.githubusercontent.com/64949957/153995268-0cb769b9-e0ee-48ea-83c1-09b881df4101.PNG)
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-<table>
-  <tr>
-    <td><img src="https://user-images.githubusercontent.com/64949957/153995383-367cbcc0-cce5-4523-a999-b8d92e44d6ab.jpg" alt="mockup" /></td>
-    <td><img src="https://user-images.githubusercontent.com/64949957/153995406-45e36cbc-8d42-4416-b23a-08ad592e4ebc.jpg" alt="mockups" /></td>
-  </tr>
-  <tr>
-    <td><img src="https://user-images.githubusercontent.com/64949957/153996560-bd631f30-46f0-4248-83b3-d8ce44a8f9e4.PNG" alt="mockup" /></td>
-    <td><img src="https://user-images.githubusercontent.com/64949957/153996577-57b1a82d-064a-49dc-9055-e2bceb854ab2.PNG" alt="mockups" /></td>
-  </tr>
-</table>
+### `npm run eject`
 
-<h2>📬 Contact</h2>
+**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-Feel free to reach me through the below handles if you'd like to contact me.
+If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-[![linkedin](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/jigar-sablee)
-[![instagram](https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/jigarsable.dev)
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+
+You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+
+## Learn More
+
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+
+To learn React, check out the [React documentation](https://reactjs.org/).
+
+### Code Splitting
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+
+### Analyzing the Bundle Size
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+
+### Making a Progressive Web App
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+
+### Advanced Configuration
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+
+### Deployment
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+
+### `npm run build` fails to minify
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
