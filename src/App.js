@@ -1,5 +1,5 @@
 import WebFont from 'webfontloader';
-import Footer from './components/Layouts/Footer/Footer';
+// import Footer from './components/Layouts/Footer/Footer';
 import Header from './components/Layouts/Header/Header';
 import Login from './components/User/Login';
 import Register from './components/User/Register';
