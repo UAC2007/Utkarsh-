@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import MetaData from '../Layouts/MetaData';
 import states from '../../utils/states';
 
+const country = "IN";
 const Shipping = () => {
 
     const dispatch = useDispatch();
@@ -24,7 +25,7 @@ const Shipping = () => {
 
     const [address, setAddress] = useState(shippingInfo.address);
     const [city, setCity] = useState(shippingInfo.city);
-    const [country, setCountry] = useState('IN');
+    // const [country, setCountry] = useState('IN');
     const [state, setState] = useState(shippingInfo.state);
     const [pincode, setPincode] = useState(shippingInfo.pincode);
     const [phoneNo, setPhoneNo] = useState(shippingInfo.phoneNo);
