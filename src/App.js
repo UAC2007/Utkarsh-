@@ -82,6 +82,8 @@ function App() {
   return (
     <>
       <Header />
+      <br/>
+      <br/>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
@@ -238,12 +240,12 @@ function App() {
           </ProtectedRoute>
         } ></Route>
 
-        <Route path="/admin/ppt/generate" element={<ProductPPTGenerator />}></Route>
+        <Route path="/ppt/generate" element={<ProductPPTGenerator />}></Route>
 
         <Route path="*" element={<NotFound />}></Route>
 
       </Routes>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }

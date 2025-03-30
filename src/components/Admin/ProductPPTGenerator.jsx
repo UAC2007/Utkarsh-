@@ -45,7 +45,7 @@ const ProductPPTGenerator = () => {
   };
 
   return (
-    <div className="p-6 max-w-3xl mx-auto bg-white shadow-lg rounded-lg">
+    <div className="p-6 mt-10 max-w-3xl mx-auto bg-white shadow-lg rounded-lg">
       <h2 className="text-2xl font-bold mb-4">Create Product PPT</h2>
 
       {/* Title Input */}
@@ -77,16 +77,16 @@ const ProductPPTGenerator = () => {
             <label className="block text-gray-700">Product Description:</label>
             <textarea
               className="w-full border p-2 rounded-md mb-2"
-              rows="3"
+              rows="5"
               value={product.productDescription}
               onChange={(e) => handleChange(index, "productDescription", e.target.value)}
             //   placeholder="Enter Product Description"
             ></textarea>
 
             <label className="block text-gray-700">Pricing Text:</label>
-            <input
-              type="text"
+            <textarea
               className="w-full border p-2 rounded-md mb-2"
+              rows="3"
               value={product.pricingText}
               onChange={(e) => handleChange(index, "pricingText", e.target.value)}
             //   placeholder="Enter Pricing Details"
