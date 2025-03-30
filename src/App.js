@@ -36,6 +36,7 @@ import UpdateUser from './components/Admin/UpdateUser';
 import ReviewsTable from './components/Admin/ReviewsTable';
 import Wishlist from './components/Wishlist/Wishlist';
 import NotFound from './components/NotFound';
+import ProductPPTGenerator from './components/Admin/ProductPPTGenerator';
 
 function App() {
 
@@ -236,6 +237,8 @@ function App() {
             </Dashboard>
           </ProtectedRoute>
         } ></Route>
+
+        <Route path="/admin/ppt/generate" element={<ProductPPTGenerator />}></Route>
 
         <Route path="*" element={<NotFound />}></Route>
 
