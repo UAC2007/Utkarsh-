@@ -41,6 +41,7 @@ const ProductPPTGenerator = () => {
       document.body.appendChild(link);
       link.click();
       link.remove();
+      setProducts([{ productName: "", productDescription: "", pricingText: "" }]);
     } catch (error) {
       setLoading(false);
       console.error("Error downloading PPT:", error);
