@@ -3,6 +3,7 @@ import axios from "axios";
 
 const ProductPPTGenerator = () => {
   const [title, setTitle] = useState("");
+  const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState([
     { productName: "", productDescription: "", pricingText: "" },
   ]);
@@ -28,6 +29,7 @@ const ProductPPTGenerator = () => {
 
   // 🟢 Send data to backend and download PPT
   const downloadPPT = async () => {
+    setLoading(true);
     try {
       const response = await axios.post("https://mmic-backend.onrender.com/api/v1/ppt/generate", { title, products }, { responseType: "blob" });
 
@@ -40,12 +42,19 @@ const ProductPPTGenerator = () => {
       link.click();
       link.remove();
     } catch (error) {
+      setLoading(false);
       console.error("Error downloading PPT:", error);
     }
+    setLoading(false);
   };
 
   return (
     <div className="p-6 mt-10 max-w-3xl mx-auto bg-white shadow-lg rounded-lg">
+       {loading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-70 z-50">
+          <div className="w-16 h-16 border-4 border-blue-500 border-dashed rounded-full animate-spin"></div>
+        </div>
+      )}
       <h2 className="text-2xl font-bold mb-4">Create Product PPT</h2>
 
       {/* Title Input */}
@@ -118,9 +127,9 @@ const ProductPPTGenerator = () => {
       {/* Generate PPT Button */}
       <button
         onClick={downloadPPT}
-        className="bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-700 ml-4"
+        className="bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-700 ml-4" disabled={loading}
       >
-        Download PPT
+         {loading ? "Downloading..." : "Download PPT"}
       </button>
     </div>
   );
