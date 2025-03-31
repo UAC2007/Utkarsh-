@@ -71,7 +71,10 @@ const ProductPPTGenerator = () => {
       {/* Product List */}
       {products.map((product, index) => (
         <div key={index} className="mb-4 border border-gray-300 bg-white shadow-lg p-4 rounded-lg flex items-center gap-4">
-           <div className="text-gray-700 font-semibold text-lg w-8 text-center">{index + 1}.</div>
+           <div className="w-8 h-8 flex items-center justify-center rounded-full bg-blue-500 text-white font-semibold text-lg">
+  {index + 1}
+</div>
+
           <div className="w-full">
             <label className="block text-gray-700">Product Name:</label>
             <input
