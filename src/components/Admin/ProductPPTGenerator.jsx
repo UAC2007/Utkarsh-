@@ -29,7 +29,7 @@ const ProductPPTGenerator = () => {
   // 🟢 Send data to backend and download PPT
   const downloadPPT = async () => {
     try {
-      const response = await axios.post("http://localhost:4000/api/v1/ppt/generate", { title, products }, { responseType: "blob" });
+      const response = await axios.post("https://mmic-backend.onrender.com/api/v1/ppt/generate", { title, products }, { responseType: "blob" });
 
       // Create a blob URL for downloading
       const url = window.URL.createObjectURL(new Blob([response.data]));
