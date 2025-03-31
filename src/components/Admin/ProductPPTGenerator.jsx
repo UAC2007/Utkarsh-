@@ -29,7 +29,7 @@ const ProductPPTGenerator = () => {
   // 🟢 Send data to backend and download PPT
   const downloadPPT = async () => {
     try {
-      const response = await axios.post("https://mmic-backend.onrender.com/api/v1/ppt/generate", { title, products }, { responseType: "blob" });
+      const response = await axios.post("http://localhost:4000/api/v1/ppt/generate", { title, products }, { responseType: "blob" });
 
       // Create a blob URL for downloading
       const url = window.URL.createObjectURL(new Blob([response.data]));
@@ -61,7 +61,8 @@ const ProductPPTGenerator = () => {
 
       {/* Product List */}
       {products.map((product, index) => (
-        <div key={index} className="mb-4 border-b pb-4 flex items-center gap-4">
+        <div key={index} className="mb-4 border border-gray-300 bg-white shadow-lg p-4 rounded-lg flex items-center gap-4">
+           <div className="text-gray-700 font-semibold text-lg w-8 text-center">{index + 1}.</div>
           <div className="w-full">
             <label className="block text-gray-700">Product Name:</label>
             <input
@@ -94,12 +95,15 @@ const ProductPPTGenerator = () => {
           </div>
 
           {/* Remove Row Button */}
-          <button
+          {products.length > 1 &&(
+            <button
             onClick={() => removeProduct(index)}
             className="bg-red-500 text-white px-3 py-2 rounded-md hover:bg-red-700"
           >
             ✕
           </button>
+          )}
+          
         </div>
       ))}
 
