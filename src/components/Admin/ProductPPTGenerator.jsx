@@ -80,7 +80,7 @@ const ProductPPTGenerator = () => {
         wordwrap: false,
       });
       const response = await axios.post(
-        "https://mmic-backend.onrender.com/api/v1/ppt/generate",
+        "http://localhost:4000/api/v1/ppt/generate",
         { title, titledescription, products, generalnotes : plainGeneralNotes },
         { responseType: "blob" }
       );
