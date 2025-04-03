@@ -26,7 +26,7 @@ const Home = () => {
 
   return (
     <main className="flex flex-col gap-3 px-2 mt-16 sm:mt-2">
-      Admin Dashboard work in progress...
+      {/* Admin Dashboard work in progress... */}
     </main>
   )
 

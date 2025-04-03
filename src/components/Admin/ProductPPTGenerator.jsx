@@ -7,6 +7,9 @@ const ProductPPTGenerator = () => {
   const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedProducts, setSelectedProducts] = useState([]);
+  const [title, setTitle] = useState("");
+  const [titledescription, setTitledescription] = useState("");
+  
 
   // Controls whether the dropdown with checkboxes is visible
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -18,7 +21,7 @@ const ProductPPTGenerator = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("https://mmic-backend.onrender.com/api/v1/ppt/generate");
+        const response = await axios.get("http://localhost:4000/api/v1/ppt/generate");
         setProducts(response.data);
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -73,14 +76,14 @@ const ProductPPTGenerator = () => {
     try {
       // We assume your backend always returns a single PPT file
       const response = await axios.post(
-        "https://mmic-backend.onrender.com/api/v1/ppt/generate",
-        { selectedProducts }, // No 'downloadType' needed, we removed it
+        "http://localhost:4000/api/v1/ppt/generate",
+        { title,titledescription,selectedProducts }, // No 'downloadType' needed, we removed it
         { responseType: "blob" }
       );
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", "Product_Presentation.pptx");
+      link.setAttribute("download", `${title}.pptx`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -97,7 +100,31 @@ const ProductPPTGenerator = () => {
   return (
     <div className="p-6 mt-10 max-w-3xl mx-auto bg-white shadow-lg rounded-lg">
       <ToastContainer />
-
+      {loading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-70 z-50">
+          <div className="w-16 h-16 border-4 border-blue-500 border-dashed rounded-full animate-spin"></div>
+        </div>
+      )}
+      <label className="block mb-2 text-gray-700 font-semibold">Event Name:</label>
+      <input
+        type="text"
+        className="w-full border p-2 rounded-md mb-4"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        required
+        // placeholder="Enter PPT Title"
+      />
+       <label className="block mb-2 text-gray-700 font-semibold">
+        Event Venue:
+      </label>
+      <textarea
+        type="text"
+        required
+        className="w-full border p-2 rounded-md mb-4"
+        value={titledescription}
+        onChange={(e) => setTitledescription(e.target.value)}
+        // placeholder="Enter PPT Title"
+      />
       <h2 className="text-2xl font-bold mb-4">Select Products for PPT</h2>
 
       {/* Search bar + Search button */}

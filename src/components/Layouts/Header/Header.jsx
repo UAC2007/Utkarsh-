@@ -7,7 +7,8 @@
 // import SecondaryDropDownMenu from './SecondaryDropDownMenu';
 // import { useState } from 'react';
 // import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
+import ProductPPTGenerator from '../../Admin/ProductPPTGenerator';
 
 const Header = () => {
 
@@ -19,12 +20,14 @@ const Header = () => {
   // const [toggleSecondaryDropDown, setToggleSecondaryDropDown] = useState(false);
 
   return (
-    <header className="bg-primary-blue fixed top-0 py-2.5 w-full z-10">
-      <div className="w-full sm:w-9/12 px-1 sm:px-4 m-auto flex justify-between items-center relative">
+    <header >
+      {/* <div className="w-full sm:w-9/12 px-1 sm:px-4 m-auto flex justify-between items-center relative">
         <Link to="/ppt/generate" className="flex items-center text-white font-medium gap-2 relative">
               Generate Product PPT
         </Link>
-      </div>
+       
+      </div> */}
+      <ProductPPTGenerator/>
     </header>
   )
 
