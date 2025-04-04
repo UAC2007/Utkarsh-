@@ -9,6 +9,17 @@ const ProductPPTGenerator = () => {
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [title, setTitle] = useState("");
   const [titledescription, setTitledescription] = useState("");
+  const [generalNotes, setGeneralNotes] = useState(
+    "➢ The prices mentioned are rough estimates and on rentals for the mentioned dates in Dubai\n" +
+    "➢ Prices mentioned above are estimates exclusive of VAT.\n" +
+    "➢ The above-attached images/video links are just for reference, the actual product may vary.\n" +
+    "➢ Timeline – need confirmation by Saturday.\n" +
+    "➢ The price includes overall project management and operations.\n" +
+    "➢ The prices are exclusive of any kinds of LED walls, fabrication, cladding and branding\n" +
+    "➢ Final price can be shared depending on the agreed scope of work and clarity of content"
+  );
+  
+
   
 
   // Controls whether the dropdown with checkboxes is visible
@@ -65,7 +76,15 @@ const ProductPPTGenerator = () => {
     // Also, if you want the search to be dynamic, you might re-filter here.
     setIsDropdownOpen((prev) => !prev);
   };
-
+  const handleGeneralNotesChange = (e) => {
+    const value = e.target.value;
+    const lines = value.split("\n");
+    if (lines.length > 8) {
+      toast.error("General Notes can only have 8 lines.");
+      return; // Do not update the state if line count exceeds 9.
+    }
+    setGeneralNotes(value);
+  };
   // Download a single PPT file that includes the selected products
   const downloadPPT = async () => {
     if (selectedProducts.length === 0) {
@@ -77,7 +96,7 @@ const ProductPPTGenerator = () => {
       // We assume your backend always returns a single PPT file
       const response = await axios.post(
         "http://localhost:4000/api/v1/ppt/generate",
-        { title,titledescription,selectedProducts }, // No 'downloadType' needed, we removed it
+        { title,titledescription,generalNotes,selectedProducts }, // No 'downloadType' needed, we removed it
         { responseType: "blob" }
       );
       const url = window.URL.createObjectURL(new Blob([response.data]));
@@ -123,9 +142,10 @@ const ProductPPTGenerator = () => {
         className="w-full border p-2 rounded-md mb-4"
         value={titledescription}
         onChange={(e) => setTitledescription(e.target.value)}
+        rows="3"
         // placeholder="Enter PPT Title"
       />
-      <h2 className="text-2xl font-bold mb-4">Select Products for PPT</h2>
+      <label className="block mb-2 text-gray-700 font-semibold">Select Products:</label>
 
       {/* Search bar + Search button */}
       <div className="flex mb-4">
@@ -167,6 +187,16 @@ const ProductPPTGenerator = () => {
           )}
         </div>
       )}
+      <label className="block mb-2 text-gray-700 font-semibold">General Notes:</label>
+<textarea
+  type="text"
+  required
+  className="w-full border p-2 rounded-md mb-4"
+  value={generalNotes}
+  onChange={handleGeneralNotesChange}
+  rows="7"
+/>
+
 
       {/* Download button */}
       <button
