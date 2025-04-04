@@ -60,8 +60,22 @@ const ProductPPTGenerator = () => {
     setGeneralNotes(value);
   };
 
+  const validaetFields = () => {
+    if (!title) {
+      toast.error("Please enter the event name.");
+      return false;
+    }
+    if (!titledescription) {
+      toast.error("Please enter the event venue.");
+      return false;
+    }
+    return true;
+  };
+
   // Download PPT file that includes the selected products
   const downloadPPT = async () => {
+    if (!validaetFields()) return;
+
     if (selectedProducts.length === 0) {
       toast.warn("Please select at least one product.");
       return;
@@ -80,7 +94,8 @@ const ProductPPTGenerator = () => {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-
+      setTitle("");
+      setTitledescription("");
       toast.success("PPT downloaded successfully!");
     } catch (error) {
       console.error("Error downloading PPT:", error);
