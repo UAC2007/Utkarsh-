@@ -159,11 +159,11 @@ const UpdateProduct = () => {
             setCategory(product.category);
             setStock(product.stock);
             setWarranty(product.warranty);
-            setBrand(product.brand.name);
+            setBrand(product.brand?.name);
             setHighlights(product.highlights);
             setSpecs(product.specifications);
             setOldImages(product.images);
-            setLogoPreview(product.brand.logo.url);
+            setLogoPreview(product.brand?.logo.url);
         }
         if (error) {
             enqueueSnackbar(error, { variant: "error" });
