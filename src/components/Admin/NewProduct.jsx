@@ -145,6 +145,21 @@ const NewProduct = () => {
     setVariants(variants.filter((v, i) => i !== index));
   };
 
+  const handleLogoUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setLogoPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveLogo = () => {
+    setLogoPreview(null);
+  };
+
   const newProductSubmitHandler = (e) => {
     e.preventDefault();
 
@@ -224,7 +239,7 @@ const NewProduct = () => {
 
   return (
     <>
-      <MetaData title="Admin: New Product | Flipkart" />
+      <MetaData title="Admin: New Product" />
 
       {loading && <BackdropLoader />}
       <form
@@ -232,57 +247,19 @@ const NewProduct = () => {
         encType="multipart/form-data"
         id="mainform"
       >
-        <div className="flex flex-col sm:flex-row bg-white rounded-lg shadow p-4">
-          <div className="flex flex-col gap-3 m-2 sm:w-1/2">
-            <TextField
-              label="Name"
-              variant="outlined"
-              size="small"
-              required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-            <TextField
-              label="Description"
-              multiline
-              rows={3}
-              required
-              variant="outlined"
-              size="small"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-            <div className="flex justify-between">
+        <div className="bg-white rounded-lg shadow p-4">
+          <h2 className="font-medium text-lg mb-3">General Information</h2>
+          <div className="flex flex-col sm:flex-row">
+            {/* Left Column */}
+            <div className="flex flex-col gap-3 m-2 sm:w-1/2">
               <TextField
-                label="Price"
-                type="number"
+                label="Name"
                 variant="outlined"
                 size="small"
-                InputProps={{
-                  inputProps: {
-                    min: 0,
-                  },
-                }}
                 required
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
               />
-              <TextField
-                label="Cutted Price"
-                type="number"
-                variant="outlined"
-                size="small"
-                InputProps={{
-                  inputProps: {
-                    min: 0,
-                  },
-                }}
-                required
-                value={cuttedPrice}
-                onChange={(e) => setCuttedPrice(e.target.value)}
-              />
-            </div>
-            <div className="flex justify-between gap-4">
               <TextField
                 label="Category"
                 select
@@ -299,33 +276,132 @@ const NewProduct = () => {
                   </MenuItem>
                 ))}
               </TextField>
+            </div>
+
+            {/* Right Column */}
+            <div className="flex flex-col gap-3 m-2 sm:w-1/2">
               <TextField
-                label="Stock"
-                type="number"
+                label="Brand"
+                select
+                fullWidth
                 variant="outlined"
                 size="small"
-                InputProps={{
-                  inputProps: {
-                    min: 0,
-                  },
-                }}
                 required
-                value={stock}
-                onChange={(e) => setStock(e.target.value)}
-              />
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+              >
+                {categories.map((el, i) => (
+                  <MenuItem value={el} key={i}>
+                    {el}
+                  </MenuItem>
+                ))}
+              </TextField>
+              <div className="flex items-center gap-4">
+                <div className="relative w-32 h-20 border rounded-lg overflow-hidden group">
+                  {!logoPreview ? (
+                    <div className="w-full h-full flex items-center justify-center text-gray-400">
+                      <ImageIcon fontSize="large" />
+                    </div>
+                  ) : (
+                    <img
+                      src={logoPreview}
+                      alt="Brand Logo"
+                      className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-110"
+                      draggable="false"
+                    />
+                  )}
+                  {logoPreview && (
+                    <button
+                      onClick={handleRemoveLogo}
+                      className="absolute top-1 right-1 bg-white text-red-500 border border-red-500 rounded-full w-5 h-5 text-xs hover:bg-red-500 hover:text-white transition"
+                    >
+                      ×
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+          <h2 className="font-medium text-lg mb-3">Pricing & Inventory</h2>
+          <div className="flex flex-col sm:flex-row">
+            {/* Left Column */}
+            <div className="flex flex-col gap-3 m-2 sm:w-1/2">
+              <div className="flex justify-between">
+                <TextField
+                  label="Price"
+                  type="number"
+                  variant="outlined"
+                  size="small"
+                  InputProps={{
+                    inputProps: {
+                      min: 0,
+                    },
+                  }}
+                  required
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                />
+                <TextField
+                  label="Cutted Price"
+                  type="number"
+                  variant="outlined"
+                  size="small"
+                  InputProps={{
+                    inputProps: {
+                      min: 0,
+                    },
+                  }}
+                  required
+                  value={cuttedPrice}
+                  onChange={(e) => setCuttedPrice(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className="flex flex-col gap-3 m-2 sm:w-1/2">
+              <div className="flex justify-between">
+                <TextField
+                  label="Stock"
+                  type="number"
+                  variant="outlined"
+                  size="small"
+                  InputProps={{
+                    inputProps: {
+                      min: 0,
+                    },
+                  }}
+                  required
+                  value={stock}
+                  onChange={(e) => setStock(e.target.value)}
+                />
+                <TextField
+                  label="Warranty"
+                  type="number"
+                  variant="outlined"
+                  size="small"
+                  InputProps={{
+                    inputProps: {
+                      min: 0,
+                    },
+                  }}
+                  required
+                  value={warranty}
+                  onChange={(e) => setWarranty(e.target.value)}
+                />
+              </div>
+            </div>
+          </div>
+          <h2 className="font-medium text-lg mb-3">Product Summary</h2>
+          <div className="flex flex-col gap-y-4">
+            <div className="flex flex-col gap-2">
               <TextField
-                label="Warranty"
-                type="number"
+                label="Short Description"
+                multiline
+                rows={3}
+                required
                 variant="outlined"
                 size="small"
-                InputProps={{
-                  inputProps: {
-                    min: 0,
-                  },
-                }}
-                required
-                value={warranty}
-                onChange={(e) => setWarranty(e.target.value)}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
               />
             </div>
 
@@ -348,7 +424,10 @@ const NewProduct = () => {
 
               <div className="flex flex-col gap-1.5">
                 {highlights.map((h, i) => (
-                  <div className="flex justify-between rounded items-center py-1 px-2 bg-green-50">
+                  <div
+                    key={i}
+                    className="flex justify-between rounded items-center py-1 px-2 bg-green-50"
+                  >
                     <p className="text-green-800 text-sm font-medium">{h}</p>
                     <span
                       onClick={() => deleteHighlight(i)}
@@ -360,198 +439,191 @@ const NewProduct = () => {
                 ))}
               </div>
             </div>
-
-            <h2 className="font-medium">Brand Details</h2>
-            <div className="flex justify-between gap-4 items-start">
-              <TextField
-                label="Brand"
-                type="text"
-                variant="outlined"
-                size="small"
-                required
-                value={brand}
-                onChange={(e) => setBrand(e.target.value)}
-              />
-              <div className="w-24 h-10 flex items-center justify-center border rounded-lg">
-                {!logoPreview ? (
-                  <ImageIcon />
-                ) : (
+          </div>
+          <h2 className="font-medium text-lg mb-3">Product Images & Video</h2>
+          <div className="flex flex-col sm:flex-row">
+            {/* Left Column */}
+            <div className="flex flex-col gap-3 m-2 sm:w-1/2">
+              <div className="flex gap-2 overflow-x-auto h-32 border rounded">
+                {imagesPreview.map((image, i) => (
                   <img
                     draggable="false"
-                    src={logoPreview}
-                    alt="Brand Logo"
+                    src={image}
+                    alt="Product"
+                    key={i}
                     className="w-full h-full object-contain"
                   />
-                )}
+                ))}
               </div>
-              <label className="rounded bg-gray-400 text-center cursor-pointer text-white py-2 px-2.5 shadow hover:shadow-lg">
+              <label className="rounded font-medium bg-gray-400 text-center cursor-pointer text-white p-2 shadow hover:shadow-lg my-2">
                 <input
                   type="file"
-                  name="logo"
+                  name="images"
                   accept="image/*"
-                  onChange={handleLogoChange}
+                  multiple
+                  onChange={handleProductImageChange}
                   className="hidden"
                 />
-                Choose Logo
+                Choose Files
               </label>
             </div>
-            <TextField
-              label="YouTube Link"
-              variant="outlined"
-              size="small"
-              placeholder="https://www.youtube.com/watch?v=..."
-              value={youtubeLink}
-              onChange={(e) => setYoutubeLink(e.target.value)}
-            />
-          </div>
-          <div className="flex flex-col gap-2 m-2 sm:w-1/2">
-            <h2 className="font-medium">Specifications</h2>
 
-            <div className="flex justify-evenly gap-2 items-center">
+            {/* Right Column */}
+            <div className="flex flex-col gap-3 m-2 sm:w-1/2">
               <TextField
-                value={specsInput.title}
-                onChange={handleSpecsChange}
-                name="title"
-                label="Name"
-                placeholder="Model No"
+                label="YouTube Link"
                 variant="outlined"
                 size="small"
+                placeholder="https://www.youtube.com/watch?v=..."
+                value={youtubeLink}
+                onChange={(e) => setYoutubeLink(e.target.value)}
               />
-              <TextField
-                value={specsInput.description}
-                onChange={handleSpecsChange}
-                name="description"
-                label="Description"
-                placeholder="WJDK42DF5"
-                variant="outlined"
-                size="small"
-              />
-              <span
-                onClick={() => addSpecs()}
-                className="py-2 px-6 bg-primary-blue text-white rounded hover:shadow-lg cursor-pointer"
-              >
-                Add
-              </span>
-            </div>
-
-            <div className="flex flex-col gap-1.5">
-              {specs.map((spec, i) => (
-                <div className="flex justify-between items-center text-sm rounded bg-blue-50 py-1 px-2">
-                  <p className="text-gray-500 font-medium">{spec.title}</p>
-                  <p>{spec.description}</p>
-                  <span
-                    onClick={() => deleteSpec(i)}
-                    className="text-red-600 hover:bg-red-200 bg-red-100 p-1 rounded-full cursor-pointer"
-                  >
-                    <DeleteIcon />
-                  </span>
-                </div>
-              ))}
-            </div>
-            <h2 className="font-medium mt-4">Tags</h2>
-            <div className="flex flex-wrap gap-3">
-              {tagsList.map((tag, index) => (
-                <label key={index} className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    value={tag}
-                    checked={tags.includes(tag)}
-                    onChange={handleTagChange}
-                    className="accent-primary-blue"
-                  />
-                  <span className="text-sm">{tag}</span>
-                </label>
-              ))}
-            </div>
-            <h2 className="font-medium mt-4">Product variants</h2>
-
-            <div className="flex gap-2 items-center">
-              <TextField
-                label="Variant"
-                name="variant"
-                value={variantInput.variant}
-                onChange={handleVariantChange}
-                size="small"
-                placeholder="8GB RAM, 128GB ROM, Black"
-              />
-              <TextField
-                label="Price"
-                name="price"
-                type="number"
-                value={variantInput.price}
-                onChange={handleVariantChange}
-                size="small"
-              />
-              <TextField
-                label="Stock"
-                name="stock"
-                type="number"
-                value={variantInput.stock}
-                onChange={handleVariantChange}
-                size="small"
-              />
-              <span
-                onClick={addVariant}
-                className="py-2 px-4 bg-primary-blue text-white rounded hover:shadow-lg cursor-pointer"
-              >
-                Add
-              </span>
-            </div>
-
-            <div className="flex flex-col gap-1.5 mt-2">
-              {variants.map((v, i) => (
-                <div
-                  key={i}
-                  className="flex justify-between items-center text-sm rounded bg-yellow-50 py-1 px-2"
-                >
-                  <p className="text-gray-800 font-medium">
-                    {v.variant} — ₹{v.price} — Stock: {v.stock}
-                  </p>
-                  <span
-                    onClick={() => deleteVariant(i)}
-                    className="text-red-600 hover:bg-red-200 bg-red-100 p-1 rounded-full cursor-pointer"
-                  >
-                    <DeleteIcon />
-                  </span>
-                </div>
-              ))}
+              <h2 className="font-medium mt-4">Tags</h2>
+              <div className="flex flex-wrap gap-3">
+                {tagsList.map((tag, index) => (
+                  <label key={index} className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      value={tag}
+                      checked={tags.includes(tag)}
+                      onChange={handleTagChange}
+                      className="accent-primary-blue"
+                    />
+                    <span className="text-sm">{tag}</span>
+                  </label>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-        <div className="flex flex-col bg-white rounded-lg shadow p-4">
-          <div className="flex flex-col gap-2 m-2">
-            <h2 className="font-medium">Product Images</h2>
-            <div className="flex gap-2 overflow-x-auto h-32 border rounded">
-              {imagesPreview.map((image, i) => (
-                <img
-                  draggable="false"
-                  src={image}
-                  alt="Product"
-                  key={i}
-                  className="w-full h-full object-contain"
+          <h2 className="font-medium text-lg mb-3">Technical Details</h2>
+          <div className="flex flex-col gap-y-4 w-full">
+            <div className="flex flex-col gap-2">
+              <h2 className="font-medium text-lg text-gray-700">
+                Specifications
+              </h2>
+
+              {/* Input Row */}
+              <div className="flex flex-wrap md:flex-nowrap gap-2">
+                <TextField
+                  value={specsInput.title}
+                  onChange={handleSpecsChange}
+                  name="title"
+                  label="Name"
+                  placeholder="Model No"
+                  variant="outlined"
+                  size="small"
+                  fullWidth
                 />
-              ))}
-            </div>
-            <label className="rounded font-medium bg-gray-400 text-center cursor-pointer text-white p-2 shadow hover:shadow-lg my-2">
-              <input
-                type="file"
-                name="images"
-                accept="image/*"
-                multiple
-                onChange={handleProductImageChange}
-                className="hidden"
-              />
-              Choose Files
-            </label>
+                <TextField
+                  value={specsInput.description}
+                  onChange={handleSpecsChange}
+                  name="description"
+                  label="Description"
+                  placeholder="WJDK42DF5"
+                  variant="outlined"
+                  size="small"
+                  fullWidth
+                />
+                <span
+                  onClick={addSpecs}
+                  className="bg-primary-blue text-white px-4 py-2 rounded hover:shadow-md"
+                >
+                  Add
+                </span>
+              </div>
 
-            <div className="flex justify-end">
-              <input
-                form="mainform"
-                type="submit"
-                className="bg-primary-orange uppercase w-1/3 p-3 text-white font-medium rounded shadow hover:shadow-lg cursor-pointer"
-                value="Submit"
-              />
+              {/* List of Specifications */}
+              <div className="flex flex-col gap-1.5 mt-2">
+                {specs.map((spec, i) => (
+                  <div
+                    key={i}
+                    className="flex justify-between items-center text-sm bg-blue-50 py-2 px-3 rounded"
+                  >
+                    <div className="flex-1 font-medium text-gray-600">
+                      {spec.title}
+                    </div>
+                    <div className="flex-1 text-gray-800">
+                      {spec.description}
+                    </div>
+                    <span
+                      onClick={() => deleteSpec(i)}
+                      className="text-red-600 hover:bg-red-200 bg-red-100 p-1 rounded-full cursor-pointer"
+                    >
+                      <DeleteIcon fontSize="small" />
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
+          </div>
+          <h2 className="font-medium text-lg mb-3">Product Variants</h2>
+          <div className="flex flex-col gap-y-4 w-full">
+            <div className="flex flex-col gap-2">
+              {/* Input Row */}
+              <div className="flex flex-wrap md:flex-nowrap gap-2">
+                <TextField
+                  label="Variant"
+                  name="variant"
+                  value={variantInput.variant}
+                  onChange={handleVariantChange}
+                  size="small"
+                  placeholder="8GB RAM, 128GB ROM, Black"
+                  fullWidth
+                />
+                <TextField
+                  label="Price"
+                  name="price"
+                  type="number"
+                  value={variantInput.price}
+                  onChange={handleVariantChange}
+                  size="small"
+                  fullWidth
+                />
+                <TextField
+                  label="Stock"
+                  name="stock"
+                  type="number"
+                  value={variantInput.stock}
+                  onChange={handleVariantChange}
+                  size="small"
+                  fullWidth
+                />
+                <span
+                  onClick={addVariant}
+                  className="bg-primary-blue text-white px-4 py-2 rounded hover:shadow-md"
+                >
+                  Add
+                </span>
+              </div>
+
+              {/* List of Specifications */}
+              <div className="flex flex-col gap-1.5 mt-2">
+                {variants.map((v, i) => (
+                  <div
+                    key={i}
+                    className="flex justify-between items-center text-sm rounded bg-yellow-50 py-1 px-2"
+                  >
+                    <p className="text-gray-800 font-medium">
+                      {v.variant} — ₹{v.price} — Stock: {v.stock}
+                    </p>
+                    <span
+                      onClick={() => deleteVariant(i)}
+                      className="text-red-600 hover:bg-red-200 bg-red-100 p-1 rounded-full cursor-pointer"
+                    >
+                      <DeleteIcon />
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="flex justify-end">
+            <input
+              form="mainform"
+              type="submit"
+              className="bg-primary-orange uppercase w-1/3 p-3 text-white font-medium rounded shadow hover:shadow-lg cursor-pointer"
+              value="Submit"
+            />
           </div>
         </div>
       </form>
@@ -559,4 +631,4 @@ const NewProduct = () => {
   );
 };
 
-export default NewProduct; // you add tags checkbox under specification
+export default NewProduct;
