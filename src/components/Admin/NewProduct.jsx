@@ -11,6 +11,7 @@ import ImageIcon from "@mui/icons-material/Image";
 import { categories } from "../../utils/constants";
 import MetaData from "../Layouts/MetaData";
 import BackdropLoader from "../Layouts/BackdropLoader";
+import { getAdminBrands } from "../../actions/brandAction";
 
 const NewProduct = () => {
   const dispatch = useDispatch();
@@ -18,6 +19,9 @@ const NewProduct = () => {
   const navigate = useNavigate();
 
   const { loading, success, error } = useSelector((state) => state.newProduct);
+  const { brands, error: getBrandsError } = useSelector(
+    (state) => state.brands
+  );
 
   const [highlights, setHighlights] = useState([]);
   const [highlightInput, setHighlightInput] = useState("");
@@ -38,8 +42,8 @@ const NewProduct = () => {
   const [images, setImages] = useState([]);
   const [imagesPreview, setImagesPreview] = useState([]);
 
-  const [logo, setLogo] = useState("");
-  const [logoPreview, setLogoPreview] = useState("");
+  /* const [logo, setLogo] = useState("");
+  const [logoPreview, setLogoPreview] = useState(""); */
   const tagsList = [
     "Best Seller",
     "New Arrival",
@@ -80,7 +84,7 @@ const NewProduct = () => {
     setSpecs(specs.filter((s, i) => i !== index));
   };
 
-  const handleLogoChange = (e) => {
+  /* const handleLogoChange = (e) => {
     const reader = new FileReader();
 
     reader.onload = () => {
@@ -91,7 +95,7 @@ const NewProduct = () => {
     };
 
     reader.readAsDataURL(e.target.files[0]);
-  };
+  }; */
 
   const handleProductImageChange = (e) => {
     const files = Array.from(e.target.files);
@@ -145,7 +149,7 @@ const NewProduct = () => {
     setVariants(variants.filter((v, i) => i !== index));
   };
 
-  const handleLogoUpload = (e) => {
+  /* const handleLogoUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
@@ -158,20 +162,24 @@ const NewProduct = () => {
 
   const handleRemoveLogo = () => {
     setLogoPreview(null);
-  };
+  }; */
 
   const newProductSubmitHandler = (e) => {
     e.preventDefault();
 
     // required field checks
+    if (brand.length < 1) {
+      enqueueSnackbar("Select Brand", { variant: "warning" });
+      return;
+    }
     if (highlights.length <= 0) {
       enqueueSnackbar("Add Highlights", { variant: "warning" });
       return;
     }
-    if (!logo) {
+    /* if (!logo) {
       enqueueSnackbar("Add Brand Logo", { variant: "warning" });
       return;
-    }
+    } */
     if (!youtubeLink) {
       enqueueSnackbar("Enter Youtube link", { variant: "warning" });
       return;
@@ -198,8 +206,8 @@ const NewProduct = () => {
     formData.set("category", category);
     formData.set("stock", stock);
     formData.set("warranty", warranty);
-    formData.set("brandname", brand);
-    formData.set("logo", logo);
+    formData.set("brand_id", brand);
+    //formData.set("logo", logo);
 
     images.forEach((image) => {
       formData.append("images", image);
@@ -236,6 +244,16 @@ const NewProduct = () => {
       navigate("/admin/products");
     }
   }, [dispatch, error, success, navigate, enqueueSnackbar]);
+
+  useEffect(() => {
+    if (error) {
+      enqueueSnackbar(error, { variant: "error" });
+      dispatch(clearErrors());
+    }
+    if (!brands || brands.length === 0) {
+      dispatch(getAdminBrands());
+    }
+  }, [dispatch, error, navigate, enqueueSnackbar]);
 
   return (
     <>
@@ -287,39 +305,15 @@ const NewProduct = () => {
                 variant="outlined"
                 size="small"
                 required
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
+                value={brand}
+                onChange={(e) => setBrand(e.target.value)}
               >
-                {categories.map((el, i) => (
-                  <MenuItem value={el} key={i}>
-                    {el}
+                {brands?.map((brand) => (
+                  <MenuItem value={brand._id} key={brand._id}>
+                    {brand.name}
                   </MenuItem>
                 ))}
               </TextField>
-              <div className="flex items-center gap-4">
-                <div className="relative w-32 h-20 border rounded-lg overflow-hidden group">
-                  {!logoPreview ? (
-                    <div className="w-full h-full flex items-center justify-center text-gray-400">
-                      <ImageIcon fontSize="large" />
-                    </div>
-                  ) : (
-                    <img
-                      src={logoPreview}
-                      alt="Brand Logo"
-                      className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-110"
-                      draggable="false"
-                    />
-                  )}
-                  {logoPreview && (
-                    <button
-                      onClick={handleRemoveLogo}
-                      className="absolute top-1 right-1 bg-white text-red-500 border border-red-500 rounded-full w-5 h-5 text-xs hover:bg-red-500 hover:text-white transition"
-                    >
-                      ×
-                    </button>
-                  )}
-                </div>
-              </div>
             </div>
           </div>
           <h2 className="font-medium text-lg mb-3">Pricing & Inventory</h2>

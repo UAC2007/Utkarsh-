@@ -60,6 +60,7 @@ const reducer = combineReducers({
   brand: brandReducer,
   brands: brandsReducer,
   newBrand: newBrandReducer,
+  brandDetails: brandDetailsReducer,
 });
 
 let initialState = {

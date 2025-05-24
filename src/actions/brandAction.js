@@ -99,6 +99,25 @@ export const deleteBrand = (id) => async (dispatch) => {
   }
 };
 
+// Get Brand Details
+export const getBrandDetails = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: BRAND_DETAILS_REQUEST });
+
+    const { data } = await getCall(`/api/v1/brand/${id}`);
+
+    dispatch({
+      type: BRAND_DETAILS_SUCCESS,
+      payload: data.brand,
+    });
+  } catch (error) {
+    dispatch({
+      type: BRAND_DETAILS_FAIL,
+      payload: error.response.data.message,
+    });
+  }
+};
+
 // Clear All Errors
 export const clearErrors = () => (dispatch) => {
   dispatch({ type: CLEAR_ERRORS });
