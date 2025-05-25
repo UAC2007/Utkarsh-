@@ -23,13 +23,15 @@ const Account = () => {
         return nameArray[nameArray.length - 1];
     }
 
+
+    
     return (
         <>
             <MetaData title="My Profile" />
 
             {loading ? <Loader /> :
                 <>
-                    <MinCategory />
+                    {/* <MinCategory /> */}
                     <main className="w-full mt-12 sm:mt-0">
 
                         {/* <!-- row --> */}

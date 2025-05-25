@@ -112,9 +112,9 @@ const UserTable = () => {
         rows.unshift({
             id: item._id,
             name: item.name,
-            avatar: item.avatar.url,
+            avatar: item.avatar?.url,
             email: item.email,
-            gender: item.gender.toUpperCase(),
+            gender: item.gender?.toUpperCase(),
             role: item.role,
             registeredOn: new Date(item.createdAt).toISOString().substring(0, 10),
         });
