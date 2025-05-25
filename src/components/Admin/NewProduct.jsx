@@ -180,10 +180,10 @@ const NewProduct = () => {
       enqueueSnackbar("Add Brand Logo", { variant: "warning" });
       return;
     } */
-    if (!youtubeLink) {
-      enqueueSnackbar("Enter Youtube link", { variant: "warning" });
-      return;
-    }
+    // if (!youtubeLink) {
+    //   enqueueSnackbar("Enter Youtube link", { variant: "warning" });
+    //   return;
+    // }
     if (specs.length <= 1) {
       enqueueSnackbar("Add Minimum 2 Specifications", { variant: "warning" });
       return;
@@ -405,7 +405,7 @@ const NewProduct = () => {
                   value={highlightInput}
                   onChange={(e) => setHighlightInput(e.target.value)}
                   type="text"
-                  placeholder="Highlight"
+                  placeholder="Highlight *"
                   className="px-2 flex-1 outline-none border-none"
                 />
                 <span
@@ -502,7 +502,7 @@ const NewProduct = () => {
                   value={specsInput.title}
                   onChange={handleSpecsChange}
                   name="title"
-                  label="Name"
+                  label="Name *"
                   placeholder="Model No"
                   variant="outlined"
                   size="small"
@@ -512,7 +512,7 @@ const NewProduct = () => {
                   value={specsInput.description}
                   onChange={handleSpecsChange}
                   name="description"
-                  label="Description"
+                  label="Description *"
                   placeholder="WJDK42DF5"
                   variant="outlined"
                   size="small"
