@@ -23,10 +23,15 @@ const NewProduct = () => {
     (state) => state.brands
   );
 
-  const [highlights, setHighlights] = useState([]);
-  const [highlightInput, setHighlightInput] = useState("");
+  /* const [highlights, setHighlights] = useState([]);
+  const [highlightInput, setHighlightInput] = useState(""); */
   const [specs, setSpecs] = useState([]);
   const [specsInput, setSpecsInput] = useState({
+    title: "",
+    description: "",
+  });
+  const [wInfo, setWInfo] = useState([]);
+  const [wInfoInput, setWInfoInput] = useState({
     title: "",
     description: "",
   });
@@ -44,14 +49,14 @@ const NewProduct = () => {
 
   /* const [logo, setLogo] = useState("");
   const [logoPreview, setLogoPreview] = useState(""); */
-  const tagsList = [
+  /* const tagsList = [
     "Best Seller",
     "New Arrival",
     "Limited Stock",
     "Assured",
     "Top Rated",
   ];
-  const [tags, setTags] = useState([]);
+  const [tags, setTags] = useState([]); */
   const [variants, setVariants] = useState([]);
   const [variantInput, setVariantInput] = useState({
     variant: "",
@@ -59,6 +64,7 @@ const NewProduct = () => {
     stock: "",
   });
   const [youtubeLink, setYoutubeLink] = useState("");
+  const [moreLink, setMoreLink] = useState("");
 
   const handleSpecsChange = (e) => {
     setSpecsInput({ ...specsInput, [e.target.name]: e.target.value });
@@ -70,7 +76,17 @@ const NewProduct = () => {
     setSpecsInput({ title: "", description: "" });
   };
 
-  const addHighlight = () => {
+  const handleWInfoChange = (e) => {
+    setWInfoInput({ ...wInfoInput, [e.target.name]: e.target.value });
+  };
+
+  const addWInfo = () => {
+    if (!wInfoInput.title.trim() || !wInfoInput.title.trim()) return;
+    setWInfo([...wInfo, wInfoInput]);
+    setWInfoInput({ title: "", description: "" });
+  };
+
+  /* const addHighlight = () => {
     if (!highlightInput.trim()) return;
     setHighlights([...highlights, highlightInput]);
     setHighlightInput("");
@@ -78,10 +94,14 @@ const NewProduct = () => {
 
   const deleteHighlight = (index) => {
     setHighlights(highlights.filter((h, i) => i !== index));
-  };
+  }; */
 
   const deleteSpec = (index) => {
     setSpecs(specs.filter((s, i) => i !== index));
+  };
+
+  const deleteWInfo = (index) => {
+    setWInfo(wInfo.filter((s, i) => i !== index));
   };
 
   /* const handleLogoChange = (e) => {
@@ -116,14 +136,14 @@ const NewProduct = () => {
     });
   };
 
-  const handleTagChange = (e) => {
+  /* const handleTagChange = (e) => {
     const { value, checked } = e.target;
     if (checked) {
       setTags([...tags, value]);
     } else {
       setTags(tags.filter((tag) => tag !== value));
     }
-  };
+  }; */
 
   const handleVariantChange = (e) => {
     setVariantInput({ ...variantInput, [e.target.name]: e.target.value });
@@ -172,10 +192,10 @@ const NewProduct = () => {
       enqueueSnackbar("Select Brand", { variant: "warning" });
       return;
     }
-    if (highlights.length <= 0) {
+    /* if (highlights.length <= 0) {
       enqueueSnackbar("Add Highlights", { variant: "warning" });
       return;
-    }
+    } */
     /* if (!logo) {
       enqueueSnackbar("Add Brand Logo", { variant: "warning" });
       return;
@@ -184,14 +204,22 @@ const NewProduct = () => {
     //   enqueueSnackbar("Enter Youtube link", { variant: "warning" });
     //   return;
     // }
+    if (!moreLink) {
+      enqueueSnackbar("Enter More link", { variant: "warning" });
+      return;
+    }
     if (specs.length <= 1) {
       enqueueSnackbar("Add Minimum 2 Specifications", { variant: "warning" });
       return;
     }
-    if (tags.length < 1) {
-      enqueueSnackbar("Add at least one tag", { variant: "warning" });
+    if (wInfo.length <= 1) {
+      enqueueSnackbar("Add Minimum 2 Warranty Details", { variant: "warning" });
       return;
     }
+    /* if (tags.length < 1) {
+      enqueueSnackbar("Add at least one tag", { variant: "warning" });
+      return;
+    } */
     if (images.length <= 0) {
       enqueueSnackbar("Add Product Images", { variant: "warning" });
       return;
@@ -213,22 +241,27 @@ const NewProduct = () => {
       formData.append("images", image);
     });
 
-    highlights.forEach((h) => {
+    /* highlights.forEach((h) => {
       formData.append("highlights", h);
-    });
+    }); */
 
     specs.forEach((s) => {
       formData.append("specifications", JSON.stringify(s));
     });
 
-    tags.forEach((tag) => {
-      formData.append("tags", tag);
+    wInfo.forEach((s) => {
+      formData.append("warranty_details", JSON.stringify(s));
     });
+
+    /* tags.forEach((tag) => {
+      formData.append("tags", tag);
+    }); */
 
     variants.forEach((variant) => {
       formData.append("variants", JSON.stringify(variant));
     });
     formData.set("youtube", youtubeLink);
+    formData.set("morelink", moreLink);
 
     dispatch(createProduct(formData));
   };
@@ -385,7 +418,7 @@ const NewProduct = () => {
             </div>
           </div>
           <h2 className="font-medium text-lg mb-3">Product Summary</h2>
-          <div className="flex flex-col gap-y-4">
+          <div className="flex flex-col gap-y-4 mb-3">
             <div className="flex flex-col gap-2">
               <TextField
                 label="Short Description"
@@ -399,7 +432,7 @@ const NewProduct = () => {
               />
             </div>
 
-            <div className="flex flex-col gap-2">
+            {/*<div className="flex flex-col gap-2">
               <div className="flex justify-between items-center border rounded">
                 <input
                   value={highlightInput}
@@ -432,7 +465,7 @@ const NewProduct = () => {
                   </div>
                 ))}
               </div>
-            </div>
+            </div> */}
           </div>
           <h2 className="font-medium text-lg mb-3">Product Images & Video</h2>
           <div className="flex flex-col sm:flex-row">
@@ -472,7 +505,15 @@ const NewProduct = () => {
                 value={youtubeLink}
                 onChange={(e) => setYoutubeLink(e.target.value)}
               />
-              <h2 className="font-medium mt-4">Tags</h2>
+              <TextField
+                label="More Link *"
+                variant="outlined"
+                size="small"
+                placeholder="Enter More Link"
+                value={moreLink}
+                onChange={(e) => setMoreLink(e.target.value)}
+              />
+              {/* <h2 className="font-medium mt-4">Tags</h2>
               <div className="flex flex-wrap gap-3">
                 {tagsList.map((tag, index) => (
                   <label key={index} className="flex items-center space-x-2">
@@ -486,7 +527,7 @@ const NewProduct = () => {
                     <span className="text-sm">{tag}</span>
                   </label>
                 ))}
-              </div>
+              </div> */}
             </div>
           </div>
           <h2 className="font-medium text-lg mb-3">Technical Details</h2>
@@ -549,6 +590,64 @@ const NewProduct = () => {
                 ))}
               </div>
             </div>
+            <div className="flex flex-col gap-2">
+              <h2 className="font-medium text-lg text-gray-700">
+                Warranty Details
+              </h2>
+
+              {/* Input Row */}
+              <div className="flex flex-wrap md:flex-nowrap gap-2">
+                <TextField
+                  value={wInfoInput.title}
+                  onChange={handleWInfoChange}
+                  name="title"
+                  label="Name *"
+                  placeholder="Model No"
+                  variant="outlined"
+                  size="small"
+                  fullWidth
+                />
+                <TextField
+                  value={wInfoInput.description}
+                  onChange={handleWInfoChange}
+                  name="description"
+                  label="Description *"
+                  placeholder="WJDK42DF5"
+                  variant="outlined"
+                  size="small"
+                  fullWidth
+                />
+                <span
+                  onClick={addWInfo}
+                  className="bg-primary-blue text-white px-4 py-2 rounded hover:shadow-md"
+                >
+                  Add
+                </span>
+              </div>
+
+              {/* List of Warranty Details */}
+              <div className="flex flex-col gap-1.5 mt-2">
+                {wInfo.map((wDet, i) => (
+                  <div
+                    key={i}
+                    className="flex justify-between items-center text-sm bg-blue-50 py-2 px-3 rounded"
+                  >
+                    <div className="flex-1 font-medium text-gray-600">
+                      {wDet.title}
+                    </div>
+                    <div className="flex-1 text-gray-800">
+                      {wDet.description}
+                    </div>
+                    <span
+                      onClick={() => deleteWInfo(i)}
+                      className="text-red-600 hover:bg-red-200 bg-red-100 p-1 rounded-full cursor-pointer"
+                    >
+                      <DeleteIcon fontSize="small" />
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
           <h2 className="font-medium text-lg mb-3">Product Variants</h2>
           <div className="flex flex-col gap-y-4 w-full">
@@ -590,7 +689,7 @@ const NewProduct = () => {
                 </span>
               </div>
 
-              {/* List of Specifications */}
+              {/* List of Variants */}
               <div className="flex flex-col gap-1.5 mt-2">
                 {variants.map((v, i) => (
                   <div
