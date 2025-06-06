@@ -30,18 +30,13 @@ const NewProduct = () => {
     title: "",
     description: "",
   });
-  const [wInfo, setWInfo] = useState([]);
-  const [wInfoInput, setWInfoInput] = useState({
-    title: "",
-    description: "",
-  });
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState(0);
   const [cuttedPrice, setCuttedPrice] = useState(0);
   const [category, setCategory] = useState("");
-  const [stock, setStock] = useState(0);
+  const [baseStock, setBaseStock] = useState(0);
   const [warranty, setWarranty] = useState(0);
   const [brand, setBrand] = useState("");
   const [images, setImages] = useState([]);
@@ -76,16 +71,6 @@ const NewProduct = () => {
     setSpecsInput({ title: "", description: "" });
   };
 
-  const handleWInfoChange = (e) => {
-    setWInfoInput({ ...wInfoInput, [e.target.name]: e.target.value });
-  };
-
-  const addWInfo = () => {
-    if (!wInfoInput.title.trim() || !wInfoInput.title.trim()) return;
-    setWInfo([...wInfo, wInfoInput]);
-    setWInfoInput({ title: "", description: "" });
-  };
-
   /* const addHighlight = () => {
     if (!highlightInput.trim()) return;
     setHighlights([...highlights, highlightInput]);
@@ -98,10 +83,6 @@ const NewProduct = () => {
 
   const deleteSpec = (index) => {
     setSpecs(specs.filter((s, i) => i !== index));
-  };
-
-  const deleteWInfo = (index) => {
-    setWInfo(wInfo.filter((s, i) => i !== index));
   };
 
   /* const handleLogoChange = (e) => {
@@ -153,12 +134,25 @@ const NewProduct = () => {
     const { variant, price, stock } = variantInput;
     if (!variant.trim() || !price || !stock) return;
 
+    const totalVariantStock = variants.reduce(
+      (acc, curr) => acc + curr.stock,
+      0
+    );
+    const newVariantStock = Number(stock);
+
+    if (totalVariantStock + newVariantStock > baseStock) {
+      enqueueSnackbar("Total variant stock should not exceed base stock", {
+        variant: "warning",
+      });
+      return;
+    }
+
     setVariants([
       ...variants,
       {
         variant,
         price: Number(price),
-        stock: Number(stock),
+        stock: newVariantStock,
       },
     ]);
 
@@ -208,14 +202,10 @@ const NewProduct = () => {
       enqueueSnackbar("Enter More link", { variant: "warning" });
       return;
     }
-    if (specs.length <= 1) {
+    /* if (specs.length <= 1) {
       enqueueSnackbar("Add Minimum 2 Specifications", { variant: "warning" });
       return;
-    }
-    if (wInfo.length <= 1) {
-      enqueueSnackbar("Add Minimum 2 Warranty Details", { variant: "warning" });
-      return;
-    }
+    } */
     /* if (tags.length < 1) {
       enqueueSnackbar("Add at least one tag", { variant: "warning" });
       return;
@@ -232,7 +222,7 @@ const NewProduct = () => {
     formData.set("price", price);
     formData.set("cuttedPrice", cuttedPrice);
     formData.set("category", category);
-    formData.set("stock", stock);
+    formData.set("stock", baseStock);
     formData.set("warranty", warranty);
     formData.set("brand_id", brand);
     //formData.set("logo", logo);
@@ -247,10 +237,6 @@ const NewProduct = () => {
 
     specs.forEach((s) => {
       formData.append("specifications", JSON.stringify(s));
-    });
-
-    wInfo.forEach((s) => {
-      formData.append("warranty_details", JSON.stringify(s));
     });
 
     /* tags.forEach((tag) => {
@@ -300,7 +286,7 @@ const NewProduct = () => {
       >
         <div className="bg-white rounded-lg shadow p-4">
           <h2 className="font-medium text-lg mb-3">General Information</h2>
-          <div className="flex flex-col sm:flex-row">
+          <div className="flex flex-col sm:flex-row mb-3">
             {/* Left Column */}
             <div className="flex flex-col gap-3 m-2 sm:w-1/2">
               <TextField
@@ -350,7 +336,7 @@ const NewProduct = () => {
             </div>
           </div>
           <h2 className="font-medium text-lg mb-3">Pricing & Inventory</h2>
-          <div className="flex flex-col sm:flex-row">
+          <div className="flex flex-col sm:flex-row mb-3">
             {/* Left Column */}
             <div className="flex flex-col gap-3 m-2 sm:w-1/2">
               <div className="flex justify-between">
@@ -397,9 +383,10 @@ const NewProduct = () => {
                     },
                   }}
                   required
-                  value={stock}
-                  onChange={(e) => setStock(e.target.value)}
+                  value={baseStock}
+                  onChange={(e) => setBaseStock(e.target.value)}
                 />
+
                 <TextField
                   label="Warranty"
                   type="number"
@@ -468,7 +455,7 @@ const NewProduct = () => {
             </div> */}
           </div>
           <h2 className="font-medium text-lg mb-3">Product Images & Video</h2>
-          <div className="flex flex-col sm:flex-row">
+          <div className="flex flex-col sm:flex-row mb-3">
             {/* Left Column */}
             <div className="flex flex-col gap-3 m-2 sm:w-1/2">
               <div className="flex gap-2 overflow-x-auto h-32 border rounded">
@@ -531,7 +518,7 @@ const NewProduct = () => {
             </div>
           </div>
           <h2 className="font-medium text-lg mb-3">Technical Details</h2>
-          <div className="flex flex-col gap-y-4 w-full">
+          <div className="flex flex-col gap-y-4 w-full mb-3">
             <div className="flex flex-col gap-2">
               <h2 className="font-medium text-lg text-gray-700">
                 Specifications
@@ -543,7 +530,7 @@ const NewProduct = () => {
                   value={specsInput.title}
                   onChange={handleSpecsChange}
                   name="title"
-                  label="Name *"
+                  label="Name"
                   placeholder="Model No"
                   variant="outlined"
                   size="small"
@@ -553,7 +540,7 @@ const NewProduct = () => {
                   value={specsInput.description}
                   onChange={handleSpecsChange}
                   name="description"
-                  label="Description *"
+                  label="Description"
                   placeholder="WJDK42DF5"
                   variant="outlined"
                   size="small"
@@ -590,67 +577,9 @@ const NewProduct = () => {
                 ))}
               </div>
             </div>
-            <div className="flex flex-col gap-2">
-              <h2 className="font-medium text-lg text-gray-700">
-                Warranty Details
-              </h2>
-
-              {/* Input Row */}
-              <div className="flex flex-wrap md:flex-nowrap gap-2">
-                <TextField
-                  value={wInfoInput.title}
-                  onChange={handleWInfoChange}
-                  name="title"
-                  label="Name *"
-                  placeholder="Model No"
-                  variant="outlined"
-                  size="small"
-                  fullWidth
-                />
-                <TextField
-                  value={wInfoInput.description}
-                  onChange={handleWInfoChange}
-                  name="description"
-                  label="Description *"
-                  placeholder="WJDK42DF5"
-                  variant="outlined"
-                  size="small"
-                  fullWidth
-                />
-                <span
-                  onClick={addWInfo}
-                  className="bg-primary-blue text-white px-4 py-2 rounded hover:shadow-md"
-                >
-                  Add
-                </span>
-              </div>
-
-              {/* List of Warranty Details */}
-              <div className="flex flex-col gap-1.5 mt-2">
-                {wInfo.map((wDet, i) => (
-                  <div
-                    key={i}
-                    className="flex justify-between items-center text-sm bg-blue-50 py-2 px-3 rounded"
-                  >
-                    <div className="flex-1 font-medium text-gray-600">
-                      {wDet.title}
-                    </div>
-                    <div className="flex-1 text-gray-800">
-                      {wDet.description}
-                    </div>
-                    <span
-                      onClick={() => deleteWInfo(i)}
-                      className="text-red-600 hover:bg-red-200 bg-red-100 p-1 rounded-full cursor-pointer"
-                    >
-                      <DeleteIcon fontSize="small" />
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
           <h2 className="font-medium text-lg mb-3">Product Variants</h2>
-          <div className="flex flex-col gap-y-4 w-full">
+          <div className="flex flex-col gap-y-4 w-full mb-3">
             <div className="flex flex-col gap-2">
               {/* Input Row */}
               <div className="flex flex-wrap md:flex-nowrap gap-2">
