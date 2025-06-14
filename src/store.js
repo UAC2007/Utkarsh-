@@ -34,6 +34,7 @@ import {
   brandReducer,
   brandsReducer,
 } from "./reducers/brandReducer";
+import { productXLSUploadReducer } from "./reducers/productXLSReducer";
 
 const reducer = combineReducers({
   user: userReducer,
@@ -61,6 +62,7 @@ const reducer = combineReducers({
   brands: brandsReducer,
   newBrand: newBrandReducer,
   brandDetails: brandDetailsReducer,
+  productXLSUpload: productXLSUploadReducer,
 });
 
 let initialState = {

@@ -44,14 +44,14 @@ const NewProduct = () => {
 
   /* const [logo, setLogo] = useState("");
   const [logoPreview, setLogoPreview] = useState(""); */
-  /* const tagsList = [
+  const tagsList = [
     "Best Seller",
     "New Arrival",
     "Limited Stock",
     "Assured",
     "Top Rated",
   ];
-  const [tags, setTags] = useState([]); */
+  const [tags, setTags] = useState([]);
   const [variants, setVariants] = useState([]);
   const [variantInput, setVariantInput] = useState({
     variant: "",
@@ -117,14 +117,14 @@ const NewProduct = () => {
     });
   };
 
-  /* const handleTagChange = (e) => {
+  const handleTagChange = (e) => {
     const { value, checked } = e.target;
     if (checked) {
       setTags([...tags, value]);
     } else {
       setTags(tags.filter((tag) => tag !== value));
     }
-  }; */
+  };
 
   const handleVariantChange = (e) => {
     setVariantInput({ ...variantInput, [e.target.name]: e.target.value });
@@ -224,7 +224,7 @@ const NewProduct = () => {
     formData.set("category", category);
     formData.set("stock", baseStock);
     formData.set("warranty", warranty);
-    formData.set("brand_id", brand);
+    formData.set("brand_code", brand);
     //formData.set("logo", logo);
 
     images.forEach((image) => {
@@ -239,9 +239,9 @@ const NewProduct = () => {
       formData.append("specifications", JSON.stringify(s));
     });
 
-    /* tags.forEach((tag) => {
+    tags.forEach((tag) => {
       formData.append("tags", tag);
-    }); */
+    });
 
     variants.forEach((variant) => {
       formData.append("variants", JSON.stringify(variant));
@@ -328,7 +328,7 @@ const NewProduct = () => {
                 onChange={(e) => setBrand(e.target.value)}
               >
                 {brands?.map((brand) => (
-                  <MenuItem value={brand._id} key={brand._id}>
+                  <MenuItem value={brand.brand_code} key={brand.brand_code}>
                     {brand.name}
                   </MenuItem>
                 ))}
@@ -500,7 +500,7 @@ const NewProduct = () => {
                 value={moreLink}
                 onChange={(e) => setMoreLink(e.target.value)}
               />
-              {/* <h2 className="font-medium mt-4">Tags</h2>
+              <h2 className="font-medium mt-4">Tags</h2>
               <div className="flex flex-wrap gap-3">
                 {tagsList.map((tag, index) => (
                   <label key={index} className="flex items-center space-x-2">
@@ -514,7 +514,7 @@ const NewProduct = () => {
                     <span className="text-sm">{tag}</span>
                   </label>
                 ))}
-              </div> */}
+              </div>
             </div>
           </div>
           <h2 className="font-medium text-lg mb-3">Technical Details</h2>

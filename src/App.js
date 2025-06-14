@@ -38,6 +38,7 @@ import Wishlist from "./components/Wishlist/Wishlist";
 import NotFound from "./components/NotFound";
 import ProductPPTGenerator from "./components/Admin/ProductPPTGenerator";
 import AddBrand from "./components/Admin/AddBrand";
+import NewProductXLS from "./components/Admin/NewProductXLS";
 
 function App() {
   const dispatch = useDispatch();
@@ -274,6 +275,17 @@ function App() {
             <ProtectedRoute isAdmin={true}>
               <Dashboard activeTab={3}>
                 <ProductTable />
+              </Dashboard>
+            </ProtectedRoute>
+          }
+        ></Route>
+
+        <Route
+          path="/admin/NewProductXLS"
+          element={
+            <ProtectedRoute isAdmin={true}>
+              <Dashboard activeTab={3}>
+                <NewProductXLS />
               </Dashboard>
             </ProtectedRoute>
           }
