@@ -1,0 +1,31 @@
+services:
+  mongo:
+    image: mongo
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  backend:
+    build: .
+    container_name: backend
+    ports:
+      - "4000:4000"
+    depends_on:
+      - mongo
+    env_file:
+      - .env  # <-- Jenkins injects this before build
+
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    tty: true
+    env_file:
+      - ./frontend/.env  # <-- Jenkins injects this too
+
+volumes:
+  mongo-data:
