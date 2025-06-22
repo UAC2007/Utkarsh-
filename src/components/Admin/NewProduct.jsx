@@ -47,6 +47,7 @@ const NewProduct = () => {
   const tagsList = [
     "Best Seller",
     "New Arrival",
+    "Future Products",
     "Limited Stock",
     "Assured",
     "Top Rated",
