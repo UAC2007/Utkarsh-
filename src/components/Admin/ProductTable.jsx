@@ -104,6 +104,28 @@ const ProductTable = () => {
       },
     },
     {
+      field: "availableStock",
+      headerName: "Available Stock",
+      type: "number",
+      headerAlign: "left",
+      align: "left",
+      minWidth: 90,
+      flex: 0.1,
+      renderCell: (params) => {
+        return (
+          <span
+            className={`font-medium ${
+              params.row.availableStock < 5
+                ? "text-red-700 bg-red-200"
+                : "text-green-700 bg-green-200"
+            } rounded-full p-1 w-6 h-6 flex items-center justify-center`}
+          >
+            {params.row.availableStock}
+          </span>
+        );
+      },
+    },
+    {
       field: "price",
       headerName: "Price",
       type: "number",
@@ -175,6 +197,7 @@ const ProductTable = () => {
         image: item.images[0]?.url,
         category: item.category,
         stock: item.stock,
+        availableStock: item.availableBaseStock ?? item.stock,
         price: item.price,
         cprice: item.cuttedPrice,
         rating: item.ratings,
