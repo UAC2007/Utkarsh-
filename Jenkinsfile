@@ -16,13 +16,14 @@ pipeline {
                 ]) {
                     sh '''
                         echo "Injecting environment files..."
-                        cp $BACKEND_ENV .env
-                        cp $FRONTEND_ENV frontend/.env
+                        cp "$BACKEND_ENV" .env
+                        cp "$FRONTEND_ENV" frontend/.env
                     '''
                 }
             }
         }
 
+        // Rest of your pipeline remains the same...
         stage('SonarQube Scan') {
             steps {
                 withSonarQubeEnv('My Sonar') {
