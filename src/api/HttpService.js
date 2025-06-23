@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create axios instance with base config
 const axiosInstance = axios.create({
-    baseURL: process.env.BACKEND_URL || 'http://localhost:4000',
+    baseURL: process.env.REACT_APP_BACKEND_URL || 'http://localhost:4000',
     headers: {
         'Content-Type': 'application/json',
     },
