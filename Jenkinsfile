@@ -3,6 +3,8 @@ pipeline {
 
     environment {
         SCANNER_HOME = tool 'SonarScanner'
+        DOCKER_IMAGE = 'flipkart-mern'
+        DOCKER_REGISTRY = 'your-docker-registry' // Replace with your registry URL
     }
 
     stages {
@@ -53,28 +55,39 @@ pipeline {
             }
         }
 
-        // 👇 New Placeholder Stages
         stage('Docker Build Image') {
             steps {
-                echo '🛠️  Building Docker image (placeholder)'
+                script {
+                    docker.build("${DOCKER_IMAGE}:${env.BUILD_ID}")
+                }
             }
         }
 
         stage('Trivy Scan Image') {
             steps {
-                echo '🔍 Scanning Docker image with Trivy (placeholder)'
+                sh "trivy image --exit-code 0 --severity HIGH,CRITICAL ${DOCKER_IMAGE}:${env.BUILD_ID}"
             }
         }
 
         stage('Docker Tag Image & Push Image') {
             steps {
-                echo '🏷️  Tagging & pushing Docker image (placeholder)'
+                script {
+                    docker.withRegistry('https://${DOCKER_REGISTRY}', 'docker-credentials') {
+                        docker.image("${DOCKER_IMAGE}:${env.BUILD_ID}").push()
+                        docker.image("${DOCKER_IMAGE}:${env.BUILD_ID}").push('latest')
+                    }
+                }
             }
         }
 
         stage('Verify Deployment') {
             steps {
-                echo '✅ Verifying deployment (placeholder)'
+                script {
+                    // Example: Verify by checking running containers or making HTTP requests
+                    sh "docker ps | grep ${DOCKER_IMAGE}"
+                    // Or use curl to verify endpoint
+                    // sh 'curl -sSf http://your-deployment-url/health'
+                }
             }
         }
     }
@@ -83,6 +96,9 @@ pipeline {
         always {
             echo '🧹 Cleaning up injected .env files...'
             sh 'rm -f .env frontend/.env'
+            
+            // Clean up Docker images to save disk space
+            sh "docker rmi ${DOCKER_IMAGE}:${env.BUILD_ID} || true"
         }
     }
 }
