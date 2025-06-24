@@ -23,7 +23,6 @@ pipeline {
             }
         }
 
-        // Rest of your pipeline remains the same...
         stage('SonarQube Scan') {
             steps {
                 withSonarQubeEnv('My Sonar') {
@@ -54,17 +53,35 @@ pipeline {
             }
         }
 
-        stage('Build & Tag Images') {
+        // 👇 New Placeholder Stages
+        stage('Docker Build Image') {
             steps {
-                sh 'docker compose build'
-                sh 'docker compose up -d'
+                echo '🛠️  Building Docker image (placeholder)'
+            }
+        }
+
+        stage('Trivy Scan Image') {
+            steps {
+                echo '🔍 Scanning Docker image with Trivy (placeholder)'
+            }
+        }
+
+        stage('Docker Tag Image & Push Image') {
+            steps {
+                echo '🏷️  Tagging & pushing Docker image (placeholder)'
+            }
+        }
+
+        stage('Verify Deployment') {
+            steps {
+                echo '✅ Verifying deployment (placeholder)'
             }
         }
     }
 
     post {
         always {
-            echo 'Cleaning up injected .env files...'
+            echo '🧹 Cleaning up injected .env files...'
             sh 'rm -f .env frontend/.env'
         }
     }
