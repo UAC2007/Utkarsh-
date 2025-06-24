@@ -273,7 +273,7 @@ const UpdateProduct = () => {
 
   return (
     <>
-      <MetaData title="Admin: Update Product | Flipkart" />
+      <MetaData title="Admin: Update Product | MMIC" />
 
       {loading && <BackdropLoader />}
       {updateLoading && <BackdropLoader />}
