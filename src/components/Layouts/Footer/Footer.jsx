@@ -12,31 +12,31 @@ const footerLinks = [
     links: [
       {
         name: "Contact Us",
-        redirect: "https://www.flipkart.com/helpcentre",
+        redirect: "https://www.MMIC.com/helpcentre",
       },
       {
         name: "About Us",
-        redirect: "https://www.flipkart.com/about-us",
+        redirect: "https://www.MMIC.com/about-us",
       },
       {
         name: "Careers",
-        redirect: "https://www.flipkartcareers.com",
+        redirect: "https://www.MMICcareers.com",
       },
       {
-        name: "Flipkart Stories",
-        redirect: "https://stories.flipkart.com",
+        name: "MMIC Stories",
+        redirect: "https://stories.MMIC.com",
       },
       {
         name: "Press",
-        redirect: "https://stories.flipkart.com/category/top-stories/news",
+        redirect: "https://stories.MMIC.com/category/top-stories/news",
       },
       {
-        name: "Flipkart Wholesale",
-        redirect: "https://www.flipkartwholesale.com",
+        name: "MMIC Wholesale",
+        redirect: "https://www.MMICwholesale.com",
       },
       {
         name: "Corporate Information",
-        redirect: "https://www.flipkart.com/corporate-information",
+        redirect: "https://www.MMIC.com/corporate-information",
       },
     ]
   },
@@ -45,19 +45,19 @@ const footerLinks = [
     links: [
       {
         name: "Payments",
-        redirect: "https://www.flipkart.com/pages/payments",
+        redirect: "https://www.MMIC.com/pages/payments",
       },
       {
         name: "Shipping",
-        redirect: "https://www.flipkart.com/pages/shipping",
+        redirect: "https://www.MMIC.com/pages/shipping",
       },
       {
         name: "Cancellation & Returns",
-        redirect: "https://www.flipkart.com/helpcentre?catalog=55c9c6edb000002e002c1701&view=CATALOG",
+        redirect: "https://www.MMIC.com/helpcentre?catalog=55c9c6edb000002e002c1701&view=CATALOG",
       },
       {
         name: "FAQ",
-        redirect: "https://www.flipkart.com/helpcentre?catalog=55c9c8e2b0000023002c1702&view=CATALOG",
+        redirect: "https://www.MMIC.com/helpcentre?catalog=55c9c8e2b0000023002c1702&view=CATALOG",
       }
     ]
   },
@@ -66,27 +66,27 @@ const footerLinks = [
     links: [
       {
         name: "Return Policy",
-        redirect: "https://www.flipkart.com/pages/returnpolicy",
+        redirect: "https://mellow-lollipop-d30423.netlify.app/",
       },
       {
         name: "Terms Of Use",
-        redirect: "https://www.flipkart.com/pages/terms",
+        redirect: "https://mellow-lollipop-d30423.netlify.app/",
       },
       {
         name: "Security",
-        redirect: "https://www.flipkart.com/pages/paymentsecurity",
+        redirect: "https://mellow-lollipop-d30423.netlify.app/",
       },
       {
         name: "Privacy",
-        redirect: "https://www.flipkart.com/pages/privacypolicy",
+        redirect: "https://mellow-lollipop-d30423.netlify.app/",
       },
       {
         name: "Sitemap",
-        redirect: "https://www.flipkart.com/sitemap",
+        redirect: "https://mellow-lollipop-d30423.netlify.app/",
       },
       {
         name: "EPR Compliance",
-        redirect: "https://www.flipkart.com/pages/ewaste-compliance-tnc",
+        redirect: "https://mellow-lollipop-d30423.netlify.app/",
       },
     ]
   },
@@ -95,15 +95,15 @@ const footerLinks = [
     links: [
       {
         name: "Facebook",
-        redirect: "https://www.facebook.com/flipkart",
+        redirect: "https://www.facebook.com/mmic",
       },
       {
         name: "Twitter",
-        redirect: "https://twitter.com/flipkart",
+        redirect: "https://twitter.com/mmic",
       },
       {
         name: "YouTube",
-        redirect: "https://www.youtube.com/flipkart",
+        redirect: "https://www.youtube.com/mmic",
       }
     ]
   }
@@ -141,7 +141,7 @@ const Footer = () => {
             <div className="w-full sm:w-5/12 my-6 mx-5 sm:mx-0 flex flex-col sm:flex-row gap-2 sm:gap-0 justify-between">
               <div className="w-full sm:w-1/2">
                 <h2 className="text-primary-grey">Mail Us:</h2>
-                <p className="mt-2 leading-5">Flipkart Internet Private Limited,<br />
+                <p className="mt-2 leading-5">MMIC Internet Private Limited,<br />
                   Buildings Alyssa, Begonia &<br />
                   Clove Embassy Tech Village,<br />
                   Outer Ring Road, Devarabeesanahalli Village,<br />
@@ -152,7 +152,7 @@ const Footer = () => {
 
               <div className="w-full sm:w-1/2">
                 <h2 className="text-primary-grey">Registered Office Address:</h2>
-                <p className="mt-2 leading-5">Flipkart Internet Private Limited,<br />
+                <p className="mt-2 leading-5">MMIC Internet Private Limited,<br />
                   Buildings Alyssa, Begonia &<br />
                   Clove Embassy Tech Village,<br />
                   Outer Ring Road, Devarabeesanahalli Village,<br />
@@ -168,20 +168,20 @@ const Footer = () => {
           {/* <!-- footer ends --> */}
 
           <div className="px-16 py-6 w-full bg-primary-darkBlue hidden sm:flex justify-between items-center text-sm text-white">
-            <a href="https://seller.flipkart.com/sell-online" target="_blank" rel="noreferrer" className="flex items-center gap-2">
-              <span className="text-yellow-400"><WorkIcon sx={{ fontSize: "20px" }} /></span> Sell On Flipkart
+            <a href="https://seller.MMIC.com/sell-online" target="_blank" rel="noreferrer" className="flex items-center gap-2">
+              <span className="text-yellow-400"><WorkIcon sx={{ fontSize: "20px" }} /></span> Sell On MMIC
             </a>
-            <a href="https://brands.flipkart.com" target="_blank" rel="noreferrer" className="flex items-center gap-2">
+            <a href="https://brands.MMIC.com" target="_blank" rel="noreferrer" className="flex items-center gap-2">
               <span className="text-yellow-400"><StarsIcon sx={{ fontSize: "20px" }} /></span> Advertise
             </a>
-            <a href="https://www.flipkart.com/the-gift-card-store" rel="noreferrer" target="_blank" className="flex items-center gap-2">
+            <a href="https://www.MMIC.com/the-gift-card-store" rel="noreferrer" target="_blank" className="flex items-center gap-2">
               <span className="text-yellow-400"><CardGiftcardIcon sx={{ fontSize: "20px" }} /></span> Gift Cards
             </a>
-            <a href="https://www.flipkart.com/helpcentre" target="_blank" rel="noreferrer" className="flex items-center gap-2">
+            <a href="https://www.MMIC.com/helpcentre" target="_blank" rel="noreferrer" className="flex items-center gap-2">
               <span className="text-yellow-400"><HelpIcon sx={{ fontSize: "20px" }} /></span> Help Center
             </a>
 
-            <span>&copy; 2007-{new Date().getFullYear()} Flipkart.com</span>
+            <span>&copy; 2007-{new Date().getFullYear()} MMIC.com</span>
             <img draggable="false" src={paymentMethods} alt="Card Payment" />
           </div>
         </>
