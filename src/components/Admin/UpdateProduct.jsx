@@ -5,57 +5,70 @@ import MenuItem from "@mui/material/MenuItem";
 import { useDispatch, useSelector } from "react-redux";
 import { useSnackbar } from "notistack";
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  REMOVE_PRODUCT_DETAILS,
-  UPDATE_PRODUCT_RESET,
-} from "../../constants/productConstants";
+import { UPDATE_PRODUCT_RESET } from "../../constants/productConstants";
 import {
   clearErrors,
   getProductDetails,
   updateProduct,
 } from "../../actions/productAction";
-import ImageIcon from "@mui/icons-material/Image";
-import BackdropLoader from "../Layouts/BackdropLoader";
+import { getAdminBrands } from "../../actions/brandAction";
 import { categories } from "../../utils/constants";
 import MetaData from "../Layouts/MetaData";
+import BackdropLoader from "../Layouts/BackdropLoader";
 
 const UpdateProduct = () => {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
-  const params = useParams();
+  const { id } = useParams();
 
-  const { loading, product, error } = useSelector(
+  const { loading, error, product } = useSelector(
     (state) => state.productDetails
   );
-  const {
-    loading: updateLoading,
-    isUpdated,
-    error: updateError,
-  } = useSelector((state) => state.product);
+  const { isUpdated } = useSelector((state) => state.product);
+  const { brands } = useSelector((state) => state.brands);
 
-  const [highlights, setHighlights] = useState([]);
-  const [highlightInput, setHighlightInput] = useState("");
-  const [specs, setSpecs] = useState([]);
-  const [specsInput, setSpecsInput] = useState({
-    title: "",
+  const [formData, setFormData] = useState({
+    name: "",
     description: "",
+    price: 0,
+    cuttedPrice: 0,
+    category: "",
+    baseStock: 0,
+    warranty: 0,
+    brand: "",
+    tags: [],
+    specs: [],
+    variants: [],
+    youtubeLink: "",
+    moreLink: "",
+    imagesPreview: [],
   });
 
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState(0);
-  const [cuttedPrice, setCuttedPrice] = useState(0);
-  const [category, setCategory] = useState("");
-  const [stock, setStock] = useState(0);
-  const [warranty, setWarranty] = useState(0);
-  const [brand, setBrand] = useState("");
+  const [specsInput, setSpecsInput] = useState({ title: "", description: "" });
+  const [variantInput, setVariantInput] = useState({
+    variant: "",
+    price: "",
+    stock: "",
+  });
   const [images, setImages] = useState([]);
-  const [oldImages, setOldImages] = useState([]);
-  const [imagesPreview, setImagesPreview] = useState([]);
+  const {
+    name,
+    description,
+    price,
+    cuttedPrice,
+    category,
+    baseStock,
+    warranty,
+    brand,
+    tags,
+    specs,
+    variants,
+    youtubeLink,
+    moreLink,
+    imagesPreview,
+  } = formData;
 
-  const [logo, setLogo] = useState("");
-  const [logoPreview, setLogoPreview] = useState("");
   const tagsList = [
     "Best Seller",
     "New Arrival",
@@ -64,82 +77,97 @@ const UpdateProduct = () => {
     "Assured",
     "Top Rated",
   ];
-  const [tags, setTags] = useState([]);
-  const [variants, setVariants] = useState([]);
-  const [variantInput, setVariantInput] = useState({
-    variant: "",
-    price: "",
-    stock: "",
-  });
-  const [youtubeLink, setYoutubeLink] = useState("");
+
+  useEffect(() => {
+    dispatch(getProductDetails(id));
+  }, [dispatch, id]);
+
+  useEffect(() => {
+    if (product && product._id === id) {
+      setFormData({
+        name: product.name,
+        description: product.description,
+        price: product.price,
+        cuttedPrice: product.cuttedPrice,
+        category: product.category,
+        baseStock: product.stock,
+        warranty: product.warranty,
+        brand: product.brand_code,
+        tags: product.tags,
+        specs: product.specifications,
+        variants: product.variants,
+        youtubeLink: product.youtube,
+        moreLink: product.morelink,
+        imagesPreview: product.images.map((img) => img.url),
+      });
+    }
+  }, [product, id]);
+
+  useEffect(() => {
+    if (brands.length === 0) {
+      dispatch(getAdminBrands());
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (error) {
+      enqueueSnackbar(error, { variant: "error" });
+      dispatch(clearErrors());
+    }
+    if (isUpdated) {
+      enqueueSnackbar("Product Updated", { variant: "success" });
+      dispatch({ type: UPDATE_PRODUCT_RESET });
+      navigate("/admin/products");
+    }
+  }, [dispatch, error, isUpdated, navigate, enqueueSnackbar]);
+
+  const handleInputChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleTagChange = (e) => {
+    const { value, checked } = e.target;
+    setFormData({
+      ...formData,
+      tags: checked
+        ? [...formData.tags, value]
+        : formData.tags.filter((t) => t !== value),
+    });
+  };
 
   const handleSpecsChange = (e) => {
     setSpecsInput({ ...specsInput, [e.target.name]: e.target.value });
   };
 
   const addSpecs = () => {
-    if (!specsInput.title.trim() || !specsInput.title.trim()) return;
-    setSpecs([...specs, specsInput]);
+    if (!specsInput.title.trim() || !specsInput.description.trim()) return;
+    setFormData((prev) => ({ ...prev, specs: [...prev.specs, specsInput] }));
     setSpecsInput({ title: "", description: "" });
   };
 
-  const addHighlight = () => {
-    if (!highlightInput.trim()) return;
-    setHighlights([...highlights, highlightInput]);
-    setHighlightInput("");
-  };
-
-  const deleteHighlight = (index) => {
-    setHighlights(highlights.filter((h, i) => i !== index));
-  };
-
   const deleteSpec = (index) => {
-    setSpecs(specs.filter((s, i) => i !== index));
-  };
-
-  const handleLogoChange = (e) => {
-    const reader = new FileReader();
-
-    setLogo("");
-    setLogoPreview("");
-
-    reader.onload = () => {
-      if (reader.readyState === 2) {
-        setLogoPreview(reader.result);
-        setLogo(reader.result);
-      }
-    };
-
-    reader.readAsDataURL(e.target.files[0]);
+    setFormData((prev) => ({
+      ...prev,
+      specs: prev.specs.filter((_, i) => i !== index),
+    }));
   };
 
   const handleProductImageChange = (e) => {
     const files = Array.from(e.target.files);
-
     setImages([]);
-    setImagesPreview([]);
-    setOldImages([]);
+    const previews = [];
 
     files.forEach((file) => {
       const reader = new FileReader();
-
       reader.onload = () => {
         if (reader.readyState === 2) {
-          setImagesPreview((oldData) => [...oldData, reader.result]);
-          setImages((oldData) => [...oldData, reader.result]);
+          previews.push(reader.result);
+          setImages((old) => [...old, reader.result]);
+          setFormData((prev) => ({ ...prev, imagesPreview: [...previews] }));
         }
       };
       reader.readAsDataURL(file);
     });
-  };
-
-  const handleTagChange = (e) => {
-    const { value, checked } = e.target;
-    if (checked) {
-      setTags([...tags, value]);
-    } else {
-      setTags(tags.filter((tag) => tag !== value));
-    }
   };
 
   const handleVariantChange = (e) => {
@@ -149,190 +177,78 @@ const UpdateProduct = () => {
   const addVariant = () => {
     const { variant, price, stock } = variantInput;
     if (!variant.trim() || !price || !stock) return;
+    const totalVariantStock = variants.reduce(
+      (acc, curr) => acc + curr.stock,
+      0
+    );
+    const newVariantStock = Number(stock);
 
-    setVariants([
-      ...variants,
-      {
-        variant,
-        price: Number(price),
-        stock: Number(stock),
-      },
-    ]);
-
+    if (totalVariantStock + newVariantStock > baseStock) {
+      enqueueSnackbar("Total variant stock should not exceed base stock", {
+        variant: "warning",
+      });
+      return;
+    }
+    setFormData((prev) => ({
+      ...prev,
+      variants: [...prev.variants, { variant, price: +price, stock: +stock }],
+    }));
     setVariantInput({ variant: "", price: "", stock: "" });
   };
 
   const deleteVariant = (index) => {
-    setVariants(variants.filter((v, i) => i !== index));
+    setFormData((prev) => ({
+      ...prev,
+      variants: prev.variants.filter((_, i) => i !== index),
+    }));
   };
 
-  const newProductSubmitHandler = (e) => {
+  const updateProductSubmitHandler = (e) => {
     e.preventDefault();
-
-    // required field checks
-    // required field checks
-    if (highlights.length <= 0) {
-      enqueueSnackbar("Add Highlights", { variant: "warning" });
-      return;
-    }
-    if (!youtubeLink) {
-      enqueueSnackbar("Enter Youtube link", { variant: "warning" });
-      return;
-    }
-    if (specs.length <= 1) {
-      enqueueSnackbar("Add Minimum 2 Specifications", { variant: "warning" });
-      return;
-    }
-    if (tags.length < 1) {
-      enqueueSnackbar("Add at least one tag", { variant: "warning" });
-      return;
-    }
-
-    const formData = new FormData();
-
-    formData.set("name", name);
-    formData.set("description", description);
-    formData.set("price", price);
-    formData.set("cuttedPrice", cuttedPrice);
-    formData.set("category", category);
-    formData.set("stock", stock);
-    formData.set("warranty", warranty);
-    formData.set("brandname", brand);
-    formData.set("logo", logo);
-
-    images.forEach((image) => {
-      formData.append("images", image);
-    });
-
-    highlights.forEach((h) => {
-      formData.append("highlights", h);
-    });
-
-    specs.forEach((s) => {
-      formData.append("specifications", JSON.stringify(s));
-    });
-
-    tags.forEach((tag) => {
-      formData.append("tags", tag);
-    });
-
-    variants.forEach((variant) => {
-      formData.append("variants", JSON.stringify(variant));
-    });
-    formData.set("youtube", youtubeLink);
-
-    dispatch(updateProduct(params.id, formData));
+    const data = new FormData();
+    data.set("name", formData.name);
+    data.set("description", formData.description);
+    data.set("price", formData.price);
+    data.set("cuttedPrice", formData.cuttedPrice);
+    data.set("category", formData.category);
+    data.set("stock", formData.baseStock);
+    data.set("warranty", formData.warranty);
+    data.set("brand_code", formData.brand);
+    data.set("youtube", formData.youtubeLink);
+    data.set("morelink", formData.moreLink);
+    images.forEach((img) => data.append("images", img));
+    formData.specs.forEach((s) =>
+      data.append("specifications", JSON.stringify(s))
+    );
+    formData.tags.forEach((t) => data.append("tags", t));
+    formData.variants.forEach((v) =>
+      data.append("variants", JSON.stringify(v))
+    );
+    dispatch(updateProduct(id, data));
   };
-
-  const productId = params.id;
-
-  useEffect(() => {
-    if (product && product._id !== productId) {
-      dispatch(getProductDetails(productId));
-    } else {
-      setName(product.name);
-      setDescription(product.description);
-      setPrice(product.price);
-      setCuttedPrice(product.cuttedPrice);
-      setCategory(product.category);
-      setStock(product.stock);
-      setWarranty(product.warranty);
-      setBrand(product.brand?.name);
-      setHighlights(product.highlights);
-      setSpecs(product.specifications);
-      setOldImages(product.images);
-      setLogoPreview(product.brand?.logo.url);
-      setTags(product.tags);
-      setVariants(product.variants);
-      setYoutubeLink(product.youtube);
-    }
-    if (error) {
-      enqueueSnackbar(error, { variant: "error" });
-      dispatch(clearErrors());
-    }
-    if (updateError) {
-      enqueueSnackbar(updateError, { variant: "error" });
-      dispatch(clearErrors());
-    }
-    if (isUpdated) {
-      enqueueSnackbar("Product Updated Successfully", { variant: "success" });
-      dispatch({ type: UPDATE_PRODUCT_RESET });
-      dispatch({ type: REMOVE_PRODUCT_DETAILS });
-      navigate("/admin/products");
-    }
-  }, [
-    dispatch,
-    error,
-    updateError,
-    isUpdated,
-    productId,
-    product,
-    navigate,
-    enqueueSnackbar,
-  ]);
 
   return (
     <>
-      <MetaData title="Admin: Update Product | Flipkart" />
-
+      <MetaData title="Admin: Update Product" />
       {loading && <BackdropLoader />}
-      {updateLoading && <BackdropLoader />}
       <form
-        onSubmit={newProductSubmitHandler}
+        onSubmit={updateProductSubmitHandler}
         encType="multipart/form-data"
         id="mainform"
       >
-        <div className="flex flex-col sm:flex-row bg-white rounded-lg shadow p-4">
-          <div className="flex flex-col gap-3 m-2 sm:w-1/2">
-            <TextField
-              label="Name"
-              variant="outlined"
-              size="small"
-              required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-            <TextField
-              label="Description"
-              multiline
-              rows={3}
-              required
-              variant="outlined"
-              size="small"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-            <div className="flex justify-between">
+        <div className="bg-white rounded-lg shadow p-4">
+          <h2 className="font-medium text-lg mb-3">General Information</h2>
+          <div className="flex flex-col sm:flex-row mb-3">
+            {/* Left Column */}
+            <div className="flex flex-col gap-3 m-2 sm:w-1/2">
               <TextField
-                label="Price"
-                type="number"
+                label="Name"
                 variant="outlined"
                 size="small"
-                InputProps={{
-                  inputProps: {
-                    min: 0,
-                  },
-                }}
                 required
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
+                value={name}
+                onChange={handleInputChange}
               />
-              <TextField
-                label="Cutted Price"
-                type="number"
-                variant="outlined"
-                size="small"
-                InputProps={{
-                  inputProps: {
-                    min: 0,
-                  },
-                }}
-                required
-                value={cuttedPrice}
-                onChange={(e) => setCuttedPrice(e.target.value)}
-              />
-            </div>
-            <div className="flex justify-between gap-4">
               <TextField
                 label="Category"
                 select
@@ -341,7 +257,7 @@ const UpdateProduct = () => {
                 size="small"
                 required
                 value={category}
-                onChange={(e) => setCategory(e.target.value)}
+                onChange={handleInputChange}
               >
                 {categories.map((el, i) => (
                   <MenuItem value={el} key={i}>
@@ -349,60 +265,323 @@ const UpdateProduct = () => {
                   </MenuItem>
                 ))}
               </TextField>
+            </div>
+
+            {/* Right Column */}
+            <div className="flex flex-col gap-3 m-2 sm:w-1/2">
               <TextField
-                label="Stock"
-                type="number"
+                label="Brand"
+                select
+                fullWidth
                 variant="outlined"
                 size="small"
-                InputProps={{
-                  inputProps: {
-                    min: 0,
-                  },
-                }}
                 required
-                value={stock}
-                onChange={(e) => setStock(e.target.value)}
-              />
+                value={brand}
+                onChange={handleInputChange}
+              >
+                {brands?.map((brand) => (
+                  <MenuItem value={brand.brand_code} key={brand.brand_code}>
+                    {brand.name}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </div>
+          </div>
+          <h2 className="font-medium text-lg mb-3">Pricing & Inventory</h2>
+          <div className="flex flex-col sm:flex-row mb-3">
+            {/* Left Column */}
+            <div className="flex flex-col gap-3 m-2 sm:w-1/2">
+              <div className="flex justify-between">
+                <TextField
+                  label="Price"
+                  type="number"
+                  variant="outlined"
+                  size="small"
+                  InputProps={{
+                    inputProps: {
+                      min: 0,
+                    },
+                  }}
+                  required
+                  value={price}
+                  onChange={handleInputChange}
+                />
+                <TextField
+                  label="Cutted Price"
+                  type="number"
+                  variant="outlined"
+                  size="small"
+                  InputProps={{
+                    inputProps: {
+                      min: 0,
+                    },
+                  }}
+                  required
+                  value={cuttedPrice}
+                  onChange={handleInputChange}
+                />
+              </div>
+            </div>
+            <div className="flex flex-col gap-3 m-2 sm:w-1/2">
+              <div className="flex justify-between">
+                <TextField
+                  label="Stock"
+                  type="number"
+                  variant="outlined"
+                  size="small"
+                  InputProps={{
+                    inputProps: {
+                      min: 0,
+                    },
+                  }}
+                  required
+                  value={baseStock}
+                  onChange={handleInputChange}
+                />
+
+                <TextField
+                  label="Warranty"
+                  type="number"
+                  variant="outlined"
+                  size="small"
+                  InputProps={{
+                    inputProps: {
+                      min: 0,
+                    },
+                  }}
+                  required
+                  value={warranty}
+                  onChange={handleInputChange}
+                />
+              </div>
+            </div>
+          </div>
+          <h2 className="font-medium text-lg mb-3">Product Summary</h2>
+          <div className="flex flex-col gap-y-4 mb-3">
+            <div className="flex flex-col gap-2">
               <TextField
-                label="Warranty"
-                type="number"
+                label="Short Description"
+                multiline
+                rows={3}
+                required
                 variant="outlined"
                 size="small"
-                InputProps={{
-                  inputProps: {
-                    min: 0,
-                  },
-                }}
-                required
-                value={warranty}
-                onChange={(e) => setWarranty(e.target.value)}
+                value={description}
+                onChange={handleInputChange}
               />
             </div>
 
-            <div className="flex flex-col gap-2">
-              <div className="flex justify-between items-center border rounded">
+            {/*<div className="flex flex-col gap-2">
+                    <div className="flex justify-between items-center border rounded">
+                      <input
+                        value={highlightInput}
+                        onChange={handleInputChange}
+                        type="text"
+                        placeholder="Highlight *"
+                        className="px-2 flex-1 outline-none border-none"
+                      />
+                      <span
+                        onClick={() => addHighlight()}
+                        className="py-2 px-6 bg-primary-blue text-white rounded-r hover:shadow-lg cursor-pointer"
+                      >
+                        Add
+                      </span>
+                    </div>
+      
+                    <div className="flex flex-col gap-1.5">
+                      {highlights.map((h, i) => (
+                        <div
+                          key={i}
+                          className="flex justify-between rounded items-center py-1 px-2 bg-green-50"
+                        >
+                          <p className="text-green-800 text-sm font-medium">{h}</p>
+                          <span
+                            onClick={() => deleteHighlight(i)}
+                            className="text-red-600 hover:bg-red-100 p-1 rounded-full cursor-pointer"
+                          >
+                            <DeleteIcon />
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div> */}
+          </div>
+          <h2 className="font-medium text-lg mb-3">Product Images & Video</h2>
+          <div className="flex flex-col sm:flex-row mb-3">
+            {/* Left Column */}
+            <div className="flex flex-col gap-3 m-2 sm:w-1/2">
+              <div className="flex gap-2 overflow-x-auto h-32 border rounded">
+                {imagesPreview.slice(0, 3).map((image, i) => (
+                  <img
+                    key={i}
+                    src={image}
+                    alt="Product"
+                    className="w-full h-full object-contain"
+                  />
+                ))}
+              </div>
+              <label className="rounded font-medium bg-gray-400 text-center cursor-pointer text-white p-2 shadow hover:shadow-lg my-2">
                 <input
-                  value={highlightInput}
-                  onChange={(e) => setHighlightInput(e.target.value)}
-                  type="text"
-                  placeholder="Highlight"
-                  className="px-2 flex-1 outline-none border-none"
+                  type="file"
+                  name="images"
+                  accept="image/*"
+                  multiple
+                  onChange={handleProductImageChange}
+                  className="hidden"
+                />
+                Choose Files
+              </label>
+            </div>
+
+            {/* Right Column */}
+            <div className="flex flex-col gap-3 m-2 sm:w-1/2">
+              <TextField
+                label="YouTube Link"
+                variant="outlined"
+                size="small"
+                placeholder="https://www.youtube.com/watch?v=..."
+                value={youtubeLink}
+                onChange={handleInputChange}
+              />
+              <TextField
+                label="More Link *"
+                variant="outlined"
+                size="small"
+                placeholder="Enter More Link"
+                value={moreLink}
+                onChange={handleInputChange}
+              />
+              <h2 className="font-medium mt-4">Tags</h2>
+              <div className="flex flex-wrap gap-3">
+                {tagsList.map((tag, index) => (
+                  <label key={index} className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      value={tag}
+                      checked={tags.includes(tag)}
+                      onChange={handleTagChange}
+                      className="accent-primary-blue"
+                    />
+                    <span className="text-sm">{tag}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          </div>
+          <h2 className="font-medium text-lg mb-3">Technical Details</h2>
+          <div className="flex flex-col gap-y-4 w-full mb-3">
+            <div className="flex flex-col gap-2">
+              <h2 className="font-medium text-lg text-gray-700">
+                Specifications
+              </h2>
+
+              {/* Input Row */}
+              <div className="flex flex-wrap md:flex-nowrap gap-2">
+                <TextField
+                  value={specsInput.title}
+                  onChange={handleSpecsChange}
+                  name="title"
+                  label="Name"
+                  placeholder="Model No"
+                  variant="outlined"
+                  size="small"
+                  fullWidth
+                />
+                <TextField
+                  value={specsInput.description}
+                  onChange={handleSpecsChange}
+                  name="description"
+                  label="Description"
+                  placeholder="WJDK42DF5"
+                  variant="outlined"
+                  size="small"
+                  fullWidth
                 />
                 <span
-                  onClick={() => addHighlight()}
-                  className="py-2 px-6 bg-primary-blue text-white rounded-r hover:shadow-lg cursor-pointer"
+                  onClick={addSpecs}
+                  className="bg-primary-blue text-white px-4 py-2 rounded hover:shadow-md"
                 >
                   Add
                 </span>
               </div>
 
-              <div className="flex flex-col gap-1.5">
-                {highlights.map((h, i) => (
-                  <div className="flex justify-between rounded items-center py-1 px-2 bg-green-50">
-                    <p className="text-green-800 text-sm font-medium">{h}</p>
+              {/* List of Specifications */}
+              <div className="flex flex-col gap-1.5 mt-2">
+                {specs.map((spec, i) => (
+                  <div
+                    key={i}
+                    className="flex justify-between items-center text-sm bg-blue-50 py-2 px-3 rounded"
+                  >
+                    <div className="flex-1 font-medium text-gray-600">
+                      {spec.title}
+                    </div>
+                    <div className="flex-1 text-gray-800">
+                      {spec.description}
+                    </div>
                     <span
-                      onClick={() => deleteHighlight(i)}
-                      className="text-red-600 hover:bg-red-100 p-1 rounded-full cursor-pointer"
+                      onClick={() => deleteSpec(i)}
+                      className="text-red-600 hover:bg-red-200 bg-red-100 p-1 rounded-full cursor-pointer"
+                    >
+                      <DeleteIcon fontSize="small" />
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          <h2 className="font-medium text-lg mb-3">Product Variants</h2>
+          <div className="flex flex-col gap-y-4 w-full mb-3">
+            <div className="flex flex-col gap-2">
+              {/* Input Row */}
+              <div className="flex flex-wrap md:flex-nowrap gap-2">
+                <TextField
+                  label="Variant"
+                  name="variant"
+                  value={variantInput.variant}
+                  onChange={handleVariantChange}
+                  size="small"
+                  placeholder="8GB RAM, 128GB ROM, Black"
+                  fullWidth
+                />
+                <TextField
+                  label="Price"
+                  name="price"
+                  type="number"
+                  value={variantInput.price}
+                  onChange={handleVariantChange}
+                  size="small"
+                  fullWidth
+                />
+                <TextField
+                  label="Stock"
+                  name="stock"
+                  type="number"
+                  value={variantInput.stock}
+                  onChange={handleVariantChange}
+                  size="small"
+                  fullWidth
+                />
+                <span
+                  onClick={addVariant}
+                  className="bg-primary-blue text-white px-4 py-2 rounded hover:shadow-md"
+                >
+                  Add
+                </span>
+              </div>
+
+              {/* List of Variants */}
+              <div className="flex flex-col gap-1.5 mt-2">
+                {variants.map((v, i) => (
+                  <div
+                    key={i}
+                    className="flex justify-between items-center text-sm rounded bg-yellow-50 py-1 px-2"
+                  >
+                    <p className="text-gray-800 font-medium">
+                      {v.variant} — ₹{v.price} — Stock: {v.stock}
+                    </p>
+                    <span
+                      onClick={() => deleteVariant(i)}
+                      className="text-red-600 hover:bg-red-200 bg-red-100 p-1 rounded-full cursor-pointer"
                     >
                       <DeleteIcon />
                     </span>
@@ -410,212 +589,18 @@ const UpdateProduct = () => {
                 ))}
               </div>
             </div>
-
-            <h2 className="font-medium">Brand Details</h2>
-            <div className="flex justify-between gap-4 items-start">
-              <TextField
-                label="Brand"
-                type="text"
-                variant="outlined"
-                size="small"
-                required
-                value={brand}
-                onChange={(e) => setBrand(e.target.value)}
-              />
-              <div className="w-24 h-10 flex items-center justify-center border rounded-lg">
-                {!logoPreview ? (
-                  <ImageIcon />
-                ) : (
-                  <img
-                    draggable="false"
-                    src={logoPreview}
-                    alt="Brand Logo"
-                    className="w-full h-full object-contain"
-                  />
-                )}
-              </div>
-              <label className="rounded font-medium bg-gray-400 text-center cursor-pointer text-white py-2 px-2.5 shadow hover:shadow-lg">
-                <input
-                  type="file"
-                  name="logo"
-                  accept="image/*"
-                  onChange={handleLogoChange}
-                  className="hidden"
-                />
-                Choose Logo
-              </label>
-            </div>
-            <TextField
-              label="YouTube Link"
-              variant="outlined"
-              size="small"
-              placeholder="https://www.youtube.com/watch?v=..."
-              value={youtubeLink}
-              onChange={(e) => setYoutubeLink(e.target.value)}
+          </div>
+          <div className="flex justify-end">
+            <input
+              form="mainform"
+              type="submit"
+              className="bg-primary-orange uppercase w-1/3 p-3 text-white font-medium rounded shadow hover:shadow-lg cursor-pointer"
+              value="Submit"
             />
-          </div>
-
-          <div className="flex flex-col gap-2 m-2 sm:w-1/2">
-            <h2 className="font-medium">Specifications</h2>
-
-            <div className="flex justify-evenly gap-2 items-center">
-              <TextField
-                value={specsInput.title}
-                onChange={handleSpecsChange}
-                name="title"
-                label="Name"
-                placeholder="Model No"
-                variant="outlined"
-                size="small"
-              />
-              <TextField
-                value={specsInput.description}
-                onChange={handleSpecsChange}
-                name="description"
-                label="Description"
-                placeholder="WJDK42DF5"
-                variant="outlined"
-                size="small"
-              />
-              <span
-                onClick={() => addSpecs()}
-                className="py-2 px-6 bg-primary-blue text-white rounded hover:shadow-lg cursor-pointer"
-              >
-                Add
-              </span>
-            </div>
-
-            <div className="flex flex-col gap-1.5">
-              {specs.map((spec, i) => (
-                <div className="flex justify-between items-center text-sm rounded bg-blue-50 py-1 px-2">
-                  <p className="text-gray-500 font-medium">{spec.title}</p>
-                  <p>{spec.description}</p>
-                  <span
-                    onClick={() => deleteSpec(i)}
-                    className="text-red-600 hover:bg-red-200 bg-red-100 p-1 rounded-full cursor-pointer"
-                  >
-                    <DeleteIcon />
-                  </span>
-                </div>
-              ))}
-            </div>
-            <h2 className="font-medium mt-4">Tags</h2>
-            <div className="flex flex-wrap gap-3">
-              {tagsList.map((tag, index) => (
-                <label key={index} className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    value={tag}
-                    checked={tags.includes(tag)}
-                    onChange={handleTagChange}
-                    className="accent-primary-blue"
-                  />
-                  <span className="text-sm">{tag}</span>
-                </label>
-              ))}
-            </div>
-            <h2 className="font-medium mt-4">Product variants</h2>
-
-            <div className="flex gap-2 items-center">
-              <TextField
-                label="Variant"
-                name="variant"
-                value={variantInput.variant}
-                onChange={handleVariantChange}
-                size="small"
-                placeholder="8GB RAM, 128GB ROM, Black"
-              />
-              <TextField
-                label="Price"
-                name="price"
-                type="number"
-                value={variantInput.price}
-                onChange={handleVariantChange}
-                size="small"
-              />
-              <TextField
-                label="Stock"
-                name="stock"
-                type="number"
-                value={variantInput.stock}
-                onChange={handleVariantChange}
-                size="small"
-              />
-              <span
-                onClick={addVariant}
-                className="py-2 px-4 bg-primary-blue text-white rounded hover:shadow-lg cursor-pointer"
-              >
-                Add
-              </span>
-            </div>
-
-            <div className="flex flex-col gap-1.5 mt-2">
-              {variants.map((v, i) => (
-                <div
-                  key={i}
-                  className="flex justify-between items-center text-sm rounded bg-yellow-50 py-1 px-2"
-                >
-                  <p className="text-gray-800 font-medium">
-                    {v.variant} — ₹{v.price} — Stock: {v.stock}
-                  </p>
-                  <span
-                    onClick={() => deleteVariant(i)}
-                    className="text-red-600 hover:bg-red-200 bg-red-100 p-1 rounded-full cursor-pointer"
-                  >
-                    <DeleteIcon />
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-        <div className="flex flex-col bg-white rounded-lg shadow p-4">
-          <div className="flex flex-col gap-2 m-2">
-            <h2 className="font-medium">Product Images</h2>
-            <div className="flex gap-2 overflow-x-auto h-32 border rounded">
-              {oldImages &&
-                oldImages.map((image, i) => (
-                  <img
-                    draggable="false"
-                    src={image.url}
-                    alt="Product"
-                    key={i}
-                    className="w-full h-full object-contain"
-                  />
-                ))}
-              {imagesPreview.map((image, i) => (
-                <img
-                  draggable="false"
-                  src={image}
-                  alt="Product"
-                  key={i}
-                  className="w-full h-full object-contain"
-                />
-              ))}
-            </div>
-            <label className="rounded font-medium bg-gray-400 text-center cursor-pointer text-white p-2 shadow hover:shadow-lg my-2">
-              <input
-                type="file"
-                name="images"
-                accept="image/*"
-                multiple
-                onChange={handleProductImageChange}
-                className="hidden"
-              />
-              Choose Files
-            </label>
-
-            <div className="flex justify-end">
-              <input
-                form="mainform"
-                type="submit"
-                className="bg-primary-orange uppercase w-1/3 p-3 text-white font-medium rounded shadow hover:shadow-lg cursor-pointer"
-                value="Update"
-              />
-            </div>
           </div>
         </div>
       </form>
+      ;
     </>
   );
 };

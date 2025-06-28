@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { TextField } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useSnackbar } from "notistack";
@@ -28,6 +28,8 @@ const AddBrand = () => {
   const navigate = useNavigate();
   const params = useParams();
   const brandId = params.id;
+
+  const fileInputRef = useRef(null);
 
   const { brands, error } = useSelector((state) => state.brands);
   const {
@@ -69,9 +71,12 @@ const AddBrand = () => {
     if (isDeleted) {
       enqueueSnackbar("Brand Deleted Successfully", { variant: "success" });
       dispatch({ type: DELETE_BRAND_RESET });
+      dispatch(getAdminBrands());
+
+      setBrandInput({ name: "", logo: null });
+      navigate("/admin/add_brand");
     }
-    dispatch(getAdminBrands());
-  }, [dispatch, error, deleteError, isDeleted, navigate, enqueueSnackbar]);
+  }, [dispatch, error, deleteError, isDeleted, enqueueSnackbar]);
 
   useEffect(() => {
     if (addError) {
@@ -81,38 +86,42 @@ const AddBrand = () => {
     if (success) {
       enqueueSnackbar("Brand Created", { variant: "success" });
       dispatch({ type: NEW_BRAND_RESET });
-      dispatch(getAdminBrands()); // 🔁 Re-fetch updated brand list
+      dispatch(getAdminBrands());
+
+      setBrandInput({ name: "", logo: null });
+      if (fileInputRef.current) fileInputRef.current.value = "";
     }
-  }, [dispatch, addError, success, navigate, enqueueSnackbar]);
+  }, [dispatch, addError, success, enqueueSnackbar]);
 
   useEffect(() => {
-    if (!brandId) return;
-    if (!brand || brand._id !== brandId) {
-      dispatch(getBrandDetails(brandId));
-    } else {
-      setBrandInput((prev) => ({ ...prev, name: brand.name }));
-    }
     if (updateError) {
       enqueueSnackbar(updateError, { variant: "error" });
       dispatch(clearErrors());
     }
+
     if (isUpdated) {
       enqueueSnackbar("Brand Updated Successfully", { variant: "success" });
       dispatch({ type: UPDATE_BRAND_RESET });
       dispatch({ type: REMOVE_BRAND_DETAILS });
-      navigate("/admin/add_brand");
+      dispatch(getAdminBrands());
+
       setBrandInput({ name: "", logo: null });
+      navigate("/admin/add_brand");
     }
-  }, [
-    dispatch,
-    error,
-    updateError,
-    isUpdated,
-    brandId,
-    brand,
-    navigate,
-    enqueueSnackbar,
-  ]);
+  }, [isUpdated, updateError, dispatch, enqueueSnackbar, navigate]);
+
+  useEffect(() => {
+    if (!brandId) return;
+
+    if (!brand || brand._id !== brandId) {
+      dispatch(getBrandDetails(brandId));
+    } else {
+      setBrandInput({
+        name: brand.name,
+        logo: brand.logo?.url || null,
+      });
+    }
+  }, [dispatch, brandId, brand]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -120,6 +129,7 @@ const AddBrand = () => {
   };
 
   const handleFileChange = (e) => {
+    if (!e.target.files || e.target.files.length === 0) return;
     const reader = new FileReader();
     reader.onload = () => {
       if (reader.readyState === 2) {
@@ -131,27 +141,29 @@ const AddBrand = () => {
 
   const brandSubmitHandler = (e) => {
     e.preventDefault();
-    if (brandInput.name.length <= 0) {
+
+    if (!brandInput.name.trim()) {
       enqueueSnackbar("Enter Brand", { variant: "warning" });
       return;
     }
+
     if (!brandInput.logo && !brandId) {
       enqueueSnackbar("Upload Brand Logo", { variant: "warning" });
       return;
     }
-    if (!brandInput.name.trim() || (!brandId && !brandInput.logo)) return;
-
-    setBrandInput({ name: "", logo: null });
 
     const formData = new FormData();
     formData.set("name", brandInput.name);
-    formData.set("logo", brandInput.logo);
+    if (brandInput.logo) {
+      formData.set("logo", brandInput.logo);
+    }
+
     if (!brandId) {
       dispatch(createBrand(formData));
-    } else if (brandId) {
+    } else {
       dispatch(updateBrand(brandId, formData));
     }
-    document.getElementById("brand-logo").value = ""; // Reset file input
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   const deleteBrandHandler = (id) => {
@@ -170,56 +182,47 @@ const AddBrand = () => {
       headerName: "Name",
       minWidth: 200,
       flex: 1,
-      renderCell: (params) => {
-        return (
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-full">
-              <img
-                draggable="false"
-                src={params.row.image}
-                alt={params.row.name}
-                className="w-full h-full rounded-full object-cover"
-              />
-            </div>
-            {params.row.name}
+      renderCell: (params) => (
+        <div className="flex items-center gap-2">
+          <div className="w-10 h-10 rounded-full overflow-hidden">
+            <img
+              draggable={false}
+              src={params.row.image}
+              alt={params.row.name}
+              className="w-full h-full object-cover"
+            />
           </div>
-        );
-      },
+          {params.row.name}
+        </div>
+      ),
     },
     {
       field: "actions",
       headerName: "Actions",
       minWidth: 100,
       flex: 0.3,
-      type: "number",
       sortable: false,
-      renderCell: (params) => {
-        return (
-          <Actions
-            editRoute={"brand"}
-            deleteHandler={deleteBrandHandler}
-            id={params.row.id}
-          />
-        );
-      },
+      renderCell: (params) => (
+        <Actions
+          editRoute={"brand"}
+          deleteHandler={deleteBrandHandler}
+          id={params.row.id}
+        />
+      ),
     },
   ];
 
-  const rows = [];
-
-  brands &&
-    brands.forEach((item) => {
-      rows.unshift({
-        id: item._id,
-        name: item.name,
-        image: item.logo?.url,
-      });
-    });
+  const rows =
+    brands?.map((item) => ({
+      id: item._id,
+      name: item.name,
+      image: item.logo?.url,
+    })) ?? [];
 
   return (
     <div className="flex flex-col gap-y-6 w-full mx-auto">
-      {loadingAdd && <BackdropLoader />}
-      {/* Brand Form */}
+      {(loadingAdd || loadingDelete || updateLoading) && <BackdropLoader />}
+
       <div className="flex flex-col gap-4 bg-white p-4 shadow rounded-md">
         <form
           onSubmit={brandSubmitHandler}
@@ -240,6 +243,7 @@ const AddBrand = () => {
               fullWidth
             />
             <input
+              ref={fileInputRef}
               id="brand-logo"
               type="file"
               accept="image/*"
@@ -247,31 +251,32 @@ const AddBrand = () => {
               className="border rounded px-2 py-1 text-sm w-full md:w-1/2"
             />
             <button className="bg-primary-blue text-white px-6 py-2 rounded hover:shadow">
-              {!brandId && "Add"}
-              {brandId && "Update"}
+              {brandId ? "Update" : "Add"}
             </button>
           </div>
+
+          {/* Preview logo if editing */}
+          {brandInput.logo && typeof brandInput.logo === "string" && (
+            <div className="mt-4">
+              <img
+                src={brandInput.logo}
+                alt="Preview"
+                className="w-20 h-20 object-contain border rounded"
+              />
+            </div>
+          )}
         </form>
 
-        {/* Brand List Table */}
-        <>
-          <MetaData title="Admin Brands" />
-
-          {loadingDelete && <BackdropLoader />}
-
-          <div style={{ height: 470 }}>
-            <DataGrid
-              rows={rows}
-              columns={columns}
-              pageSize={10}
-              disableSelectIconOnClick
-              sx={{
-                boxShadow: 0,
-                border: 0,
-              }}
-            />
-          </div>
-        </>
+        <MetaData title="Admin Brands" />
+        <div style={{ height: 470 }}>
+          <DataGrid
+            rows={rows}
+            columns={columns}
+            pageSize={10}
+            disableSelectionOnClick
+            sx={{ boxShadow: 0, border: 0 }}
+          />
+        </div>
       </div>
     </div>
   );
