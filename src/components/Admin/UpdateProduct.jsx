@@ -22,10 +22,14 @@ const UpdateProduct = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  const { loading, error, product } = useSelector(
-    (state) => state.productDetails
+  const {
+    loading: productDetailsLoading,
+    error,
+    product,
+  } = useSelector((state) => state.productDetails);
+  const { isUpdated, loading: productUpdateLoading } = useSelector(
+    (state) => state.product
   );
-  const { isUpdated } = useSelector((state) => state.product);
   const { brands } = useSelector((state) => state.brands);
 
   const [formData, setFormData] = useState({
@@ -230,7 +234,7 @@ const UpdateProduct = () => {
   return (
     <>
       <MetaData title="Admin: Update Product | MMC" />
-      {loading && <BackdropLoader />}
+      {(productDetailsLoading || productUpdateLoading) && <BackdropLoader />}
       <form
         onSubmit={updateProductSubmitHandler}
         encType="multipart/form-data"
