@@ -229,7 +229,7 @@ const UpdateProduct = () => {
 
   return (
     <>
-      <MetaData title="Admin: Update Product" />
+      <MetaData title="Admin: Update Product | MMC" />
       {loading && <BackdropLoader />}
       <form
         onSubmit={updateProductSubmitHandler}

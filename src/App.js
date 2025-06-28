@@ -59,7 +59,10 @@ function App() {
   });
 
   useEffect(() => {
-    dispatch(loadUser());
+    const route = window.location.pathname.split("/")[1];
+    if (route !== "login") {//TODO: temp fix to stop showing 401 at login page
+      dispatch(loadUser());
+    }
     // getStripeApiKey();
   }, [dispatch]);
 
