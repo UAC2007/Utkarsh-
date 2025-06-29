@@ -39,6 +39,10 @@ import NotFound from "./components/NotFound";
 import ProductPPTGenerator from "./components/Admin/ProductPPTGenerator";
 import AddBrand from "./components/Admin/AddBrand";
 import NewProductXLS from "./components/Admin/NewProductXLS";
+import OrderStatusReport from "./components/Admin/OrderStatusReport";
+import RevenueReport from "./components/Admin/RevenueReport";
+import InvoiceReport from "./components/Admin/InvoiceReport";
+import ProductSalesReport from "./components/Admin/ProductSalesReport";
 
 function App() {
   const dispatch = useDispatch();
@@ -60,7 +64,8 @@ function App() {
 
   useEffect(() => {
     const route = window.location.pathname.split("/")[1];
-    if (route !== "login") {//TODO: temp fix to stop showing 401 at login page
+    if (route !== "login") {
+      //TODO: temp fix to stop showing 401 at login page
       dispatch(loadUser());
     }
     // getStripeApiKey();
@@ -348,6 +353,50 @@ function App() {
             </ProtectedRoute>
           }
         ></Route>
+
+        <Route
+          path="/admin/report/orderStatus"
+          element={
+            <ProtectedRoute isAdmin={true}>
+              <Dashboard activeTab={null}>
+                <OrderStatusReport />
+              </Dashboard>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/report/revenue"
+          element={
+            <ProtectedRoute isAdmin={true}>
+              <Dashboard activeTab={1}>
+                <RevenueReport />
+              </Dashboard>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/report/invoices"
+          element={
+            <ProtectedRoute isAdmin={true}>
+              <Dashboard activeTab={1}>
+                <InvoiceReport />
+              </Dashboard>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/report/productSales"
+          element={
+            <ProtectedRoute isAdmin={true}>
+              <Dashboard activeTab={1}>
+                <ProductSalesReport />
+              </Dashboard>
+            </ProtectedRoute>
+          }
+        />
 
         <Route path="/ppt/generate" element={<ProductPPTGenerator />}></Route>
 
