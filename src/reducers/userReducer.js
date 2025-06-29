@@ -53,6 +53,14 @@ export const userReducer = (state = { user: {} }, { type, payload }) => {
             };
         case LOGIN_USER_SUCCESS:
         case REGISTER_USER_SUCCESS:
+            localStorage.setItem('token', payload?.token);
+            localStorage.setItem('user', JSON.stringify(payload?.user));
+            return {
+                ...state,
+                loading: false,
+                isAuthenticated: true,
+                user: payload?.user,
+            };
         case LOAD_USER_SUCCESS:
             return {
                 ...state,
