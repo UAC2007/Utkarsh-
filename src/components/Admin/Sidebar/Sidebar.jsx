@@ -92,11 +92,6 @@ const Sidebar = ({ activeTab, setToggleSidebar }) => {
       ],
     },
     {
-      icon: <AccountBoxIcon />,
-      label: "My Profile",
-      ref: "/account",
-    },
-    {
       icon: <LogoutIcon />,
       label: "Logout",
     },

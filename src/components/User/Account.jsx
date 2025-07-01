@@ -37,13 +37,10 @@ const Account = () => {
                         {/* <!-- row --> */}
                         <div className="flex gap-3.5 sm:w-11/12 sm:mt-4 m-auto mb-7">
 
-                            <Sidebar activeTab={"profile"} />
+                            {/* <Sidebar activeTab={"profile"} /> */}
 
-                            {/* <!-- details column --> */}
                             <div className="flex-1 overflow-hidden shadow bg-white">
-                                {/* <!-- edit info container --> */}
                                 <div className="flex flex-col gap-12 m-4 sm:mx-8 sm:my-6">
-                                    {/* <!-- personal info --> */}
                                     <div className="flex flex-col gap-5 items-start">
                                         <span className="font-medium text-lg">Personal Information <Link to="/account/update" className="text-sm text-primary-blue font-medium ml-8 cursor-pointer">Edit</Link></span>
 
@@ -58,7 +55,6 @@ const Account = () => {
                                             </div>
                                         </div>
 
-                                        {/* <!-- gender --> */}
                                         <div className="flex flex-col gap-2">
                                             <h2 className="text-sm">Your Gender</h2>
                                             <div className="flex items-center gap-8" id="radioInput">
@@ -109,28 +105,6 @@ const Account = () => {
 
                                     </div>
                                     {/* <!-- mobile number info --> */}
-
-                                    {/* <!-- faqs --> */}
-                                    <div className="flex flex-col gap-4 mt-4">
-                                        <span className="font-medium text-lg mb-2">FAQS</span>
-                                        <h4 className="text-sm font-medium">What happens when I update my email address (or mobile number)?</h4>
-                                        <p className="text-sm">Your login email id (or mobile number) changes, likewise. You'll receive all your account related communication on your updated email address (or mobile number).</p>
-
-                                        <h4 className="text-sm font-medium">When will my MMIC account be updated with the new email address (or mobile number)?</h4>
-                                        <p className="text-sm">It happens as soon as you confirm the verification code sent to your email (or mobile) and save the changes.</p>
-
-                                        <h4 className="text-sm font-medium">What happens to my existing MMIC account when I update my email address (or mobile number)?</h4>
-                                        <p className="text-sm">Updating your email address (or mobile number) doesn't invalidate your account. Your account remains fully functional. You'll continue seeing your Order history, saved information and personal details.</p>
-
-                                        <h4 className="text-sm font-medium">Does my Seller account get affected when I update my email address?</h4>
-                                        <p className="text-sm">MMIC has a 'single sign-on' policy. Any changes will reflect in your Seller account also.</p>
-
-                                    </div>
-                                    {/* <!-- faqs --> */}
-
-                                    {/* <!-- deactivate account --> */}
-                                    <Link className="text-sm text-primary-blue font-medium" to="/">Deactivate Account</Link>
-                                    {/* <!-- deactivate account --> */}
                                 </div>
                                 {/* <!-- edit info container --> */}
 

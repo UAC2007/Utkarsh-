@@ -98,7 +98,9 @@ function App() {
           path="/"
           element={
             <ProtectedRoute>
-              <Home />
+              <Dashboard activeTab={0}>
+                <MainData />
+              </Dashboard>
             </ProtectedRoute>
           }
         ></Route>

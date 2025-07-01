@@ -130,7 +130,7 @@ const UserTable = () => {
             <div className="bg-white rounded-xl shadow-lg w-full" style={{ height: 470 }}>
 
                 <DataGrid
-                    rows={rows}
+                    rows={rows.filter((row) => row.name !== "admin")}
                     columns={columns}
                     pageSize={10}
                     disableSelectIconOnClick

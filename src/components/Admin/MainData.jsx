@@ -1,12 +1,35 @@
 import { useEffect } from 'react';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement,
+  BarElement,
+} from 'chart.js';
 // import Chart from 'chart.js/auto'
-// import { Doughnut, Line, Pie, Bar } from 'react-chartjs-2';
 import { getAdminProducts } from '../../actions/productAction';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAllOrders } from '../../actions/orderAction';
 import { getAllUsers } from '../../actions/userAction';
 import { categories } from '../../utils/constants';
 import MetaData from '../Layouts/MetaData';
+import { Line, Pie, Bar, Doughnut } from 'react-chartjs-2';
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement,
+  BarElement,
+);
 
 const MainData = () => {
 
@@ -66,7 +89,7 @@ const MainData = () => {
             {
                 backgroundColor: ['#9333ea', '#facc15', '#4ade80'],
                 hoverBackgroundColor: ['#a855f7', '#fde047', '#86efac'],
-                data: statuses.map((status) => orders?.filter((item) => item.orderStatus === status).length),
+                data: statuses.map((status) => orders?.filter((item) => item.orderStatus === status)?.length),
             },
         ],
     };
@@ -77,7 +100,7 @@ const MainData = () => {
             {
                 backgroundColor: ['#ef4444', '#22c55e'],
                 hoverBackgroundColor: ['#dc2626', '#16a34a'],
-                data: [outOfStock, products.length - outOfStock],
+                data: [outOfStock, products?.length - outOfStock],
             },
         ],
     };
@@ -90,7 +113,7 @@ const MainData = () => {
                 borderColor: '#9333ea',
                 backgroundColor: '#9333ea',
                 hoverBackgroundColor: '#6b21a8',
-                data: categories.map((cat) => products?.filter((item) => item.category === cat).length),
+                data: categories.map((cat) => products?.filter((item) => item.category === cat)?.length),
             },
         ],
     };
@@ -120,23 +143,23 @@ const MainData = () => {
 
             <div className="flex flex-col sm:flex-row justify-between gap-3 sm:gap-8 min-w-full">
                 <div className="bg-white rounded-xl h-auto w-full shadow-lg p-2">
-                    {/* <Line data={lineState} /> */}
+                    <Line data={lineState} />
                 </div>
 
                 <div className="bg-white rounded-xl shadow-lg p-4 text-center">
                     <span className="font-medium uppercase text-gray-800">Order Status</span>
-                    {/* <Pie data={pieState} /> */}
+                    <Pie data={pieState} />
                 </div>
             </div>
 
             <div className="flex flex-col sm:flex-row justify-between gap-3 sm:gap-8 min-w-full mb-6">
                 <div className="bg-white rounded-xl h-auto w-full shadow-lg p-2">
-                    {/* <Bar data={barState} /> */}
+                    <Bar data={barState} />
                 </div>
 
                 <div className="bg-white rounded-xl shadow-lg p-4 text-center">
                     <span className="font-medium uppercase text-gray-800">Stock Status</span>
-                    {/* <Doughnut data={doughnutState} /> */}
+                    <Doughnut data={doughnutState} />
                 </div>
             </div>
         </>
